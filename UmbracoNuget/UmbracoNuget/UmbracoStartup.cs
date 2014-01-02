@@ -1,0 +1,31 @@
+﻿using umbraco.cms.businesslogic.packager;
+using Umbraco.Core;
+
+namespace UmbracoNuget
+{
+    public class UmbracoStartup : ApplicationEventHandler
+    {
+        protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+        {
+            //Check to see if section needs to be added
+            Install.AddSection(applicationContext);
+
+            //Check to see if language keys for section needs to be added
+            Install.AddSectionLanguageKeys();
+
+            //Add OLD Style Package Event
+            InstalledPackage.BeforeDelete += InstalledPackage_BeforeDelete;
+        }
+
+        void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
+        {
+            //Check which package is being uninstalled
+            if (sender.Data.Name == "NuGet")
+            {
+                //Start Uninstall - clean up process...
+                //Uninstall.RemoveSection();
+                //Uninstall.RemoveSectionLanguageKeys();
+            }
+        }
+    }
+}
