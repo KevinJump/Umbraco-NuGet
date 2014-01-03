@@ -24,7 +24,7 @@ namespace UmbracoNuget
             if (nugetSection == null)
             {
                 //So let's create it the section
-                sectionService.MakeNew("NuGet", "nuget", "icon-pulse");
+                sectionService.MakeNew("NuGet", "nuget", "icon-app");
 
             }
         }

@@ -225,6 +225,12 @@
     <Content Include="config\404handlers.config" />
     <Content Include="bin\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
     <Content Include="bin\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
+    <Content Include="Views\Master.cshtml" />
+    <Content Include="Views\Partials\umbBanner.cshtml" />
+    <Content Include="Views\Partials\umbContact.cshtml" />
+    <Content Include="Views\Partials\umbFeature.cshtml" />
+    <Content Include="Views\Partials\umbSocial.cshtml" />
+    <Content Include="Views\Partials\umbTextPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -260,6 +266,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\MacroPartials\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UmbracoNuget\UmbracoNuget.csproj">
+      <Project>{7b256dce-8fc1-433c-b6da-9e558c81d216}</Project>
+      <Name>UmbracoNuget</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
