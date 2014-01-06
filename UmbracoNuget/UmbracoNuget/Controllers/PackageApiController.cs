@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NuGet;
 using Umbraco.Web.Mvc;
@@ -10,49 +8,55 @@ using UmbracoNuget.Models;
 namespace UmbracoNuget.Controllers
 {
     [PluginController("NuGet")]
-    public class PackageApiController : UmbracoAuthorizedApiController
+    public class PackageApiController : UmbracoApiController
     {
-        /// <summary>
-        /// http://localhost:64700/umbraco/NuGet/PackageApi/GetAllPackages
-        /// </summary>
-        /// <returns></returns>
-        public List<Package> GetAllPackages()
+        public const int PageSize   = 10;
+        public const string RepoUrl = "https://packages.nuget.org/api/v2";
+
+        public PackagesResponse GetPackages(int page = 0)
         {
             //Connect to the official package repository
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(RepoUrl);
 
-            //Get the list of all NuGet packages      
-            List<IPackage> packages = repo.GetPackages().OrderBy(x => x.DownloadCount).Take(10).ToList();
+            //Get the number of packages in the repo (latest version)
+            //Is there a way - to get this only once as it won't change between pages I hope?!
+            var count = repo.GetPackages().Where(x => x.IsLatestVersion).Count();
 
-            var packageItems = new List<Package>();
-            
+            //Get the list of all NuGet packages (latest version)
+            List<IPackage> packages = repo.GetPackages().Where(x => x.IsLatestVersion).OrderByDescending(x => x.DownloadCount).Skip(page * PageSize).Take(PageSize).ToList();
+
+            var packageData = new List<Package>();
+
             foreach (var package in packages)
             {
                 var packageToAdd = new Package();
 
-                packageToAdd.AssemblyReferences         = package.AssemblyReferences;
-                packageToAdd.Authors                    = package.Authors;
-                packageToAdd.DependencySets             = package.DependencySets;
-                packageToAdd.Description                = package.Description;
-                packageToAdd.DownloadCount              = package.DownloadCount;
-                packageToAdd.IconUrl                    = package.IconUrl;
-                packageToAdd.Id                         = package.Id;
-                packageToAdd.IsLatestVersion            = package.IsLatestVersion;
-                packageToAdd.Owners                     = package.Owners;
-                packageToAdd.PackageAssemblyReferences  = package.PackageAssemblyReferences;
-                packageToAdd.ProjectUrl                 = package.ProjectUrl;
-                packageToAdd.Published                  = package.Published;
-                packageToAdd.Summary                    = package.Summary;
-                packageToAdd.Tags                       = package.Tags;
-                packageToAdd.Title                      = package.Title;
-                packageToAdd.Version                    = package.Version;
-                
-                //Add the package
-                packageItems.Add(packageToAdd);
+                packageToAdd.Authors        = package.Authors;
+                packageToAdd.Description    = package.Description;
+                packageToAdd.DownloadCount  = package.DownloadCount;
+                packageToAdd.IconUrl        = package.IconUrl;
+                packageToAdd.Id             = package.Id;
+                packageToAdd.ProjectUrl     = package.ProjectUrl;
+                packageToAdd.Published      = package.Published;
+                packageToAdd.Summary        = package.Summary;
+                packageToAdd.Tags           = package.Tags;
+                packageToAdd.Title          = package.Title;
+                packageToAdd.Version        = package.Version;
+
+                //Add it to the list
+                packageData.Add(packageToAdd);
+
             }
 
-            //Return the packages
-            return packageItems;
+            //Build up object to return
+            var packageResponse             = new PackagesResponse();
+            packageResponse.Packages        = packageData;
+            packageResponse.NoResults       = count;
+            packageResponse.PreviousLink    = null;     //TODO
+            packageResponse.NextLink        = null;     //TODO
+
+            //Return the package response
+            return packageResponse;
         }
     }
 }
