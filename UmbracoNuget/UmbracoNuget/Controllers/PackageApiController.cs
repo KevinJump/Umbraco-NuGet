@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web.Hosting;
+using System.Web.Http;
+using System.Web.Http.Routing;
 using NuGet;
+using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 using UmbracoNuget.Models;
@@ -10,7 +15,7 @@ namespace UmbracoNuget.Controllers
     [PluginController("NuGet")]
     public class PackageApiController : UmbracoApiController
     {
-        public const int PageSize   = 10;
+        public const int PageSize   = 9;
         public const string RepoUrl = "https://packages.nuget.org/api/v2";
 
         public PackagesResponse GetPackages(int page = 0)
@@ -20,7 +25,14 @@ namespace UmbracoNuget.Controllers
 
             //Get the number of packages in the repo (latest version)
             //Is there a way - to get this only once as it won't change between pages I hope?!
-            var count = repo.GetPackages().Where(x => x.IsLatestVersion).Count();
+            var totalcount = repo.GetPackages().Where(x => x.IsLatestVersion).Count();
+            var totalPages = (int)Math.Ceiling((double)totalcount / PageSize);
+
+            //Paging from here
+            //http://bitoftech.net/2013/11/25/implement-resources-pagination-asp-net-web-api/
+            var urlHelper   = new UrlHelper(Request);
+            //var prevLink    = page > 0 ? urlHelper.Link("PackageApi", new { page = page - 1 }) : string.Empty;
+            //var nextLink    = page < totalPages - 1 ? urlHelper.Link("PackageApi", new { page = page + 1 }) : string.Empty;
 
             //Get the list of all NuGet packages (latest version)
             List<IPackage> packages = repo.GetPackages().Where(x => x.IsLatestVersion).OrderByDescending(x => x.DownloadCount).Skip(page * PageSize).Take(PageSize).ToList();
@@ -51,12 +63,61 @@ namespace UmbracoNuget.Controllers
             //Build up object to return
             var packageResponse             = new PackagesResponse();
             packageResponse.Packages        = packageData;
-            packageResponse.NoResults       = count;
-            packageResponse.PreviousLink    = null;     //TODO
-            packageResponse.NextLink        = null;     //TODO
+            packageResponse.NoResults       = totalcount;
+            packageResponse.PreviousLink    = null;
+            packageResponse.NextLink        = null;
 
             //Return the package response
             return packageResponse;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <returns></returns>
+        public string GetPackageDetail(string packageID)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// <returns></returns>
+        public bool GetPackageInstall()
+        {
+            var repo        = PackageRepositoryFactory.Default.CreateRepository(RepoUrl);
+            var path        = new DefaultPackagePathResolver(RepoUrl);
+            var fileSystem  = new PhysicalFileSystem(HostingEnvironment.MapPath("~/"));
+
+            //Create a NuGet Package Manager
+            var packageManager = new PackageManager(repo, path, fileSystem);
+
+            bool isInstalled = false;
+
+            //Install package
+            try
+            {
+                var packageVersion = SemanticVersion.Parse("2.0.3");
+
+                //Install the package...
+                packageManager.InstallPackage("jQuery", packageVersion, false, false);
+
+                //Set flag to true
+                isInstalled = true;
+
+            }
+            catch (Exception)
+            {
+                //Some error - set flag to false
+                isInstalled = false;
+                //throw;
+            }
+
+            //Returned bool if it's installed or not
+            return isInstalled;
+
+        }
+
     }
 }
