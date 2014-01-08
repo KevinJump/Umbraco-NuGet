@@ -86,8 +86,8 @@ namespace UmbracoNuget.Controllers
         /// <returns></returns>
         public bool GetPackageInstall()
         {
-            var repo        = PackageRepositoryFactory.Default.CreateRepository(RepoUrl);
-            var path        = new DefaultPackagePathResolver(RepoUrl);
+            var repo        = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+            var path        = new DefaultPackagePathResolver("https://packages.nuget.org/api/v2");
             var fileSystem  = new PhysicalFileSystem(HostingEnvironment.MapPath("~/"));
 
             //Create a NuGet Package Manager
@@ -115,8 +115,7 @@ namespace UmbracoNuget.Controllers
             }
 
             //Returned bool if it's installed or not
-            return isInstalled;
-
+            return isInstalled;        
         }
 
     }
