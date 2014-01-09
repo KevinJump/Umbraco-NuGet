@@ -29,5 +29,22 @@ namespace UmbracoNuget.Helpers
             //Return the list of packages
             return packageManager.LocalRepository.GetPackages().ToList();
         }
+
+        public static bool HasUpdates()
+        {
+            //Get Package Manager
+            var packageManager = PackageManagerService.Instance.PackageManager;
+
+            //Get the current installed packages
+            var installedPackages = packageManager.LocalRepository.GetPackages();
+
+            //Get Updates for the set of installed packages
+            var packageUpdates = packageManager.LocalRepository.GetUpdates(installedPackages, false, false);
+
+            //Return bool if we have any updates
+            return packageUpdates.Any();
+        }
+
+
     }
 }
