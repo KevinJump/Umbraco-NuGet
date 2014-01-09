@@ -50,6 +50,12 @@ namespace UmbracoNuget.Controllers
                 treeNodes = GetInstalledPackagesTreeItems();
             }
 
+            //Check if we are rendering the updates tree
+            if (id == "updates")
+            {
+                treeNodes = GetPackageUpdatesTreeItems();
+            }
+
 
             //Create tree nodes
             if (treeNodes.Any())
@@ -114,6 +120,26 @@ namespace UmbracoNuget.Controllers
             foreach (var package in installedPackages)
             {
                 treeNodes.Add(new SectionTreeNode() { Id = package.Id, Title = package.Title, Icon = "icon-box-open", Route = string.Format("{0}/view/{1}", mainRoute, "installed-package"), HasChildren = false });
+            }
+
+            return treeNodes;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<SectionTreeNode> GetPackageUpdatesTreeItems()
+        {
+            //Add nodes
+            var treeNodes = new List<SectionTreeNode>();
+
+            //Get package updates
+            var packageUpdates = PackageHelper.ListPackageUpdates();
+
+            foreach (var package in packageUpdates)
+            {
+                treeNodes.Add(new SectionTreeNode() { Id = package.Id, Title = package.Title, Icon = "icon-box-open", Route = string.Format("{0}/view/{1}", mainRoute, "update"), HasChildren = false });
             }
 
             return treeNodes;
