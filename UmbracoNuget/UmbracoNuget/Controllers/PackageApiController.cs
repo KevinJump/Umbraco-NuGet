@@ -10,6 +10,8 @@ using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 using UmbracoNuget.Models;
+using UmbracoNuget.Services;
+using PackageHelper = UmbracoNuget.Helpers.PackageHelper;
 using umb = Umbraco.Web;
 
 namespace UmbracoNuget.Controllers
@@ -213,16 +215,38 @@ namespace UmbracoNuget.Controllers
 
         /// <summary>
         /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<IPackage> GetInstalledPackages()
+        {
+            var installedPackages = PackageHelper.ListInstalledPackages();
+
+            return installedPackages;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool GetHasInstalledPackages()
+        {
+            //Get Package Manager
+            var packageManager = PackageManagerService.Instance.PackageManager;
+
+            //Count number of installed packages
+            var installedPackages = packageManager.LocalRepository.GetPackages().Count();
+
+            return installedPackages > 0;
+
+        }
+
+        /// <summary>
+        /// 
         /// <returns></returns>
         public bool GetPackageInstall()
         {
-            var repo        = PackageRepositoryFactory.Default.CreateRepository(MyGetRepoUrl);
-            var path        = new DefaultPackagePathResolver(MyGetRepoUrl);
-            var fileSystem  = new PhysicalFileSystem(HostingEnvironment.MapPath("~/App_Plugins/Packages"));
-            var localRepo   = PackageRepositoryFactory.Default.CreateRepository(HostingEnvironment.MapPath("~/App_Plugins/Packages"));
-
-            //Create a NuGet Package Manager
-            var packageManager = new PackageManager(repo, path, fileSystem, localRepo);
+            //Get Package Manager
+            var packageManager = PackageManagerService.Instance.PackageManager;
 
             bool isInstalled = false;
 

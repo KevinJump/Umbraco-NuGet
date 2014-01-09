@@ -10,5 +10,7 @@ namespace UmbracoNuget.Models
         public string Icon { get; set; }
 
         public string Route { get; set; }
+
+        public bool HasChildren { get; set; }
     }
 }
