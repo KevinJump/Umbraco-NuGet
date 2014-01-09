@@ -6,13 +6,22 @@ namespace UmbracoNuget.Models
 {
     public class PackagesResponse
     {
-        public int NoResults { get; set; }
+        public int TotalItems { get; set; }
 
-        public List<Package> Packages { get; set; }
+        public int TotalPages { get; set; }
+
+        public int CurrentPage { get; set; }
+
+        public List<Row> Rows { get; set; }
 
         public string NextLink { get; set; }
 
         public string PreviousLink { get; set; }
+    }
+
+    public class Row
+    {
+        public List<Package> Packages { get; set; }
     }
 
     public class Package

@@ -5,23 +5,28 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using NuGet;
+using Umbraco.Core;
 using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 using UmbracoNuget.Models;
+using umb = Umbraco.Web;
 
 namespace UmbracoNuget.Controllers
 {
     [PluginController("NuGet")]
     public class PackageApiController : UmbracoApiController
     {
-        public const int PageSize   = 9;
-        public const string RepoUrl = "https://packages.nuget.org/api/v2";
+        public const int PageSize           = 9;
+        public const string NuGetRepoUrl    = "https://packages.nuget.org/api/v2";
+        public const string MyGetRepoUrl    = "https://www.myget.org/F/umbraco-community/";
 
-        public PackagesResponse GetPackages(int page = 0)
+        public PackagesResponse GetPackages(string sortBy, int page = 1)
         {
+            var zeroPageIndex = page - 1;
+
             //Connect to the official package repository
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(RepoUrl);
+            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(NuGetRepoUrl);
 
             //Get the number of packages in the repo (latest version)
             //Is there a way - to get this only once as it won't change between pages I hope?!
@@ -30,42 +35,167 @@ namespace UmbracoNuget.Controllers
 
             //Paging from here
             //http://bitoftech.net/2013/11/25/implement-resources-pagination-asp-net-web-api/
-            var urlHelper   = new UrlHelper(Request);
-            //var prevLink    = page > 0 ? urlHelper.Link("PackageApi", new { page = page - 1 }) : string.Empty;
-            //var nextLink    = page < totalPages - 1 ? urlHelper.Link("PackageApi", new { page = page + 1 }) : string.Empty;
 
-            //Get the list of all NuGet packages (latest version)
-            List<IPackage> packages = repo.GetPackages().Where(x => x.IsLatestVersion).OrderByDescending(x => x.DownloadCount).Skip(page * PageSize).Take(PageSize).ToList();
+            var prevLink = zeroPageIndex > 0 ? (page - 1).ToString() : string.Empty;
+            var nextLink = zeroPageIndex < totalPages - 1 ? (page + 1).ToString() : string.Empty;
 
-            var packageData = new List<Package>();
+            List<IPackage> packages = new List<IPackage>();
 
-            foreach (var package in packages)
+
+            switch (sortBy)
             {
-                var packageToAdd = new Package();
+                case "downloads":
+                    packages = repo.GetPackages()
+                        .Where(x => x.IsLatestVersion)
+                        .OrderByDescending(x => x.DownloadCount)
+                        .Skip(zeroPageIndex * PageSize)
+                        .Take(PageSize).ToList();
 
-                packageToAdd.Authors        = package.Authors;
-                packageToAdd.Description    = package.Description;
-                packageToAdd.DownloadCount  = package.DownloadCount;
-                packageToAdd.IconUrl        = package.IconUrl;
-                packageToAdd.Id             = package.Id;
-                packageToAdd.ProjectUrl     = package.ProjectUrl;
-                packageToAdd.Published      = package.Published;
-                packageToAdd.Summary        = package.Summary;
-                packageToAdd.Tags           = package.Tags;
-                packageToAdd.Title          = package.Title;
-                packageToAdd.Version        = package.Version;
+                    break;
 
-                //Add it to the list
-                packageData.Add(packageToAdd);
+                case "recent":
+                    packages = repo.GetPackages()
+                        .Where(x => x.IsLatestVersion)
+                        .OrderByDescending(x => x.Published)
+                        .Skip(zeroPageIndex * PageSize)
+                        .Take(PageSize).ToList();
+                    break;
 
+                case "a-z":
+                    packages = repo.GetPackages()
+                        .Where(x => x.IsLatestVersion)
+                        .OrderBy(x => x.Id)
+                        .Skip(zeroPageIndex * PageSize)
+                        .Take(PageSize).ToList();
+                    break;
+
+                default:
+                    packages = repo.GetPackages()
+                        .Where(x => x.IsLatestVersion)
+                        .OrderByDescending(x => x.DownloadCount)
+                        .Skip(zeroPageIndex * PageSize)
+                        .Take(PageSize).ToList();
+                    break;
+            }
+
+
+            //The rows we will return
+            var rows = new List<Row>();
+
+            foreach (IEnumerable<IPackage> row in packages.InGroupsOf(3))
+            {
+                var packagesInRow = new List<Package>();
+
+                foreach (IPackage package in row)
+                {
+                    var packageToAdd            = new Package();
+                    packageToAdd.Authors        = package.Authors;
+                    packageToAdd.Description    = package.Description;
+                    packageToAdd.DownloadCount  = package.DownloadCount;
+                    packageToAdd.IconUrl        = package.IconUrl;
+                    packageToAdd.Id             = package.Id;
+                    packageToAdd.ProjectUrl     = package.ProjectUrl;
+                    packageToAdd.Published      = package.Published;
+                    packageToAdd.Summary        = package.Summary;
+                    packageToAdd.Tags           = package.Tags;
+                    packageToAdd.Title          = package.Title;
+                    packageToAdd.Version        = package.Version;
+
+                    //Add the package to the row object
+                    packagesInRow.Add(packageToAdd);
+                }
+
+                //Add the row to to the list of rows
+                var packageRow      = new Row();
+                packageRow.Packages = packagesInRow;
+
+                rows.Add(packageRow);
+            }
+            
+            //Build up object to return
+            var packageResponse             = new PackagesResponse();
+            packageResponse.Rows            = rows;
+            packageResponse.TotalItems      = totalcount;
+            packageResponse.TotalPages      = totalPages;
+            packageResponse.CurrentPage     = page;
+            packageResponse.PreviousLink    = prevLink;
+            packageResponse.NextLink        = nextLink;
+
+            //Return the package response
+            return packageResponse;
+        }
+
+        [HttpGet]
+        public PackagesResponse SearchPackages(string searchTerm, int page = 1)
+        {
+            var zeroPageIndex = page - 1;
+
+            //Connect to the official package repository
+            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(NuGetRepoUrl);
+
+
+            var searchPackages = repo.Search(searchTerm, false);
+
+            //Search for packages with search term
+            var packages = searchPackages
+                .Where(x => x.IsLatestVersion)
+                .OrderByDescending(x => x.Published)
+                .Skip(zeroPageIndex * PageSize)
+                .Take(PageSize).ToList();
+
+            //Get the number of packages in the repo (latest version)
+
+            var totalcount = searchPackages.Where(x => x.IsLatestVersion).Count();
+            var totalPages = (int)Math.Ceiling((double)totalcount / PageSize);
+
+            //Paging from here
+            //http://bitoftech.net/2013/11/25/implement-resources-pagination-asp-net-web-api/
+
+            var prevLink = zeroPageIndex > 0 ? (page - 1).ToString() : string.Empty;
+            var nextLink = zeroPageIndex < totalPages - 1 ? (page + 1).ToString() : string.Empty;
+
+
+            //The rows we will return
+            var rows = new List<Row>();
+
+            foreach (IEnumerable<IPackage> row in packages.InGroupsOf(3))
+            {
+                var packagesInRow = new List<Package>();
+
+                foreach (IPackage package in row)
+                {
+                    var packageToAdd            = new Package();
+                    packageToAdd.Authors        = package.Authors;
+                    packageToAdd.Description    = package.Description;
+                    packageToAdd.DownloadCount  = package.DownloadCount;
+                    packageToAdd.IconUrl        = package.IconUrl;
+                    packageToAdd.Id             = package.Id;
+                    packageToAdd.ProjectUrl     = package.ProjectUrl;
+                    packageToAdd.Published      = package.Published;
+                    packageToAdd.Summary        = package.Summary;
+                    packageToAdd.Tags           = package.Tags;
+                    packageToAdd.Title          = package.Title;
+                    packageToAdd.Version        = package.Version;
+
+                    //Add the package to the row object
+                    packagesInRow.Add(packageToAdd);
+                }
+
+                //Add the row to to the list of rows
+                var packageRow      = new Row();
+                packageRow.Packages = packagesInRow;
+
+                rows.Add(packageRow);
             }
 
             //Build up object to return
             var packageResponse             = new PackagesResponse();
-            packageResponse.Packages        = packageData;
-            packageResponse.NoResults       = totalcount;
-            packageResponse.PreviousLink    = null;
-            packageResponse.NextLink        = null;
+            packageResponse.Rows            = rows;
+            packageResponse.TotalItems      = totalcount;
+            packageResponse.TotalPages      = totalPages;
+            packageResponse.CurrentPage     = page;
+            packageResponse.PreviousLink    = prevLink;
+            packageResponse.NextLink        = nextLink;
 
             //Return the package response
             return packageResponse;
@@ -86,22 +216,32 @@ namespace UmbracoNuget.Controllers
         /// <returns></returns>
         public bool GetPackageInstall()
         {
-            var repo        = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-            var path        = new DefaultPackagePathResolver("https://packages.nuget.org/api/v2");
-            var fileSystem  = new PhysicalFileSystem(HostingEnvironment.MapPath("~/"));
+            var repo        = PackageRepositoryFactory.Default.CreateRepository(MyGetRepoUrl);
+            var path        = new DefaultPackagePathResolver(MyGetRepoUrl);
+            var fileSystem  = new PhysicalFileSystem(HostingEnvironment.MapPath("~/App_Plugins/Packages"));
+            var localRepo   = PackageRepositoryFactory.Default.CreateRepository(HostingEnvironment.MapPath("~/App_Plugins/Packages"));
 
             //Create a NuGet Package Manager
-            var packageManager = new PackageManager(repo, path, fileSystem);
+            var packageManager = new PackageManager(repo, path, fileSystem, localRepo);
 
             bool isInstalled = false;
 
             //Install package
             try
             {
-                var packageVersion = SemanticVersion.Parse("2.0.3");
+                var packageVersion = SemanticVersion.Parse("1.0.0");
 
                 //Install the package...
-                packageManager.InstallPackage("jQuery", packageVersion, false, false);
+                packageManager.InstallPackage("Analytics", packageVersion, false, false);
+
+                var package = packageManager.LocalRepository.FindPackage("Analytics", packageVersion);
+                if (package != null)
+                {
+                    foreach (var packageFile in package.GetContentFiles())
+                    {
+                        var y = packageFile.EffectivePath;
+                    }
+                }
 
                 //Set flag to true
                 isInstalled = true;
