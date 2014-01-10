@@ -203,15 +203,6 @@ namespace UmbracoNuget.Controllers
             return packageResponse;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="packageID"></param>
-        /// <returns></returns>
-        public string GetPackageDetail(string packageID)
-        {
-            return null;
-        }
 
         /// <summary>
         /// 
@@ -280,6 +271,23 @@ namespace UmbracoNuget.Controllers
 
             //Returned bool if it's installed or not
             return isInstalled;        
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <returns></returns>
+        public IPackage GetPackageDetail(string packageID)
+        {
+            //Get Package Manager
+            var packageManager = PackageManagerService.Instance.PackageManager;
+
+            //Find the package in the MyGet Repo based on the packageID
+            var findPackage = packageManager.SourceRepository.FindPackage(packageID);
+
+            //Return the found package from the repo
+            return findPackage;
         }
 
     }

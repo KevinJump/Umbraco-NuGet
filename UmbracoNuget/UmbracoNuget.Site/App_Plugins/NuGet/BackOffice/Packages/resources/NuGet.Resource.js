@@ -15,6 +15,12 @@
 
             searchPackagesPage: function (searchTerm, pageNumber) {
                 return $http.get("NuGet/PackageApi/SearchPackages?searchTerm=" + searchTerm + "&page=" + pageNumber);
-        }
+            },
+
+            getPackageDetail: function (packageID) {
+                return $http.get("NuGet/PackageApi/GetPackageDetail?packageID=" + packageID);
+            },
+
+            
         };
     });
