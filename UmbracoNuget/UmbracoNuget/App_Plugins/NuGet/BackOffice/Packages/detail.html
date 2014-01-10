@@ -1,0 +1,41 @@
+﻿<style>
+    table td {
+        word-break: break-all;
+    }
+</style>
+
+<umb-panel ng-controller="NuGet.DetailController">
+    <umb-header>
+        <span class="span8">
+            <h1 class="headline">NuGet Package Repository</h1>
+        </span>
+        <span class="span4">
+            <div class="btn-toolbar umb-btn-toolbar pull-right">
+                <button class="btn btn-primary" ng-click="installPackage(packageID)">Install Package</button>
+            </div>
+        </span>
+    </umb-header>
+
+    <div class="umb-panel-body">
+
+        <h2>Detail Stuff here (Brows & Search)</h2>
+        <ul>
+            <li>Display Title</li>
+            <li>Display PackageID</li>
+            <li>Display FileSize (So got indication if going to be quick or slow install)</li>
+            <li>Display Summary/Description</li>
+            <li>List Authors/Owners</li>
+            <li>Dipsay Total Downloads</li>
+            <li>Display Donwloads of this Version</li>
+            <li>List Tags</li>
+            <li>List Dependencies</li>
+            <li>Updated/Created/Published Date</li>
+            <li>List Previous Version & Download Counts for versions?</li>
+            <li>Icon Url</li>
+            <li>Project Site/Url</li>
+
+            <li>LOADING Bar - when installing - hide when done & show Installed message instead</li>
+        </ul>
+
+    </div>
+</umb-panel>

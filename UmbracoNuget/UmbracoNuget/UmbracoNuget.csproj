@@ -225,12 +225,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Detail.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Search.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Browse.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\View.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\search.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\browse.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\resources\NuGet.Resource.js" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\detail.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\view.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
