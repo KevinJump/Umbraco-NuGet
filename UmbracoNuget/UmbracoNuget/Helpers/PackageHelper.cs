@@ -59,6 +59,39 @@ namespace UmbracoNuget.Helpers
             return packageUpdates.ToList();
         }
 
+        public static bool PackageHasUpdates(string packageID, string version)
+        {
+            var packageManager = PackageManagerService.Instance.PackageManager;
+
+            //Convert version to SemanticVersion
+            var semVersion = SemanticVersion.Parse(version);
+
+            //Get the package
+            var getPackage = packageManager.LocalRepository.FindPackagesById(packageID).Where(x => x.Version == semVersion);
+
+            //Get Updates for the set of installed packages
+            var packageUpdates = packageManager.SourceRepository.GetUpdates(getPackage, false, false);
+
+            //Return bool if we have any updates
+            return packageUpdates.Any();
+        }
+
+        public static List<IPackage> ListUpdatesForPackage(string packageID, string version)
+        {
+            var packageManager = PackageManagerService.Instance.PackageManager;
+
+            //Convert version to SemanticVersion
+            var semVersion = SemanticVersion.Parse(version);
+
+            //Get the package
+            var getPackage = packageManager.LocalRepository.FindPackagesById(packageID).Where(x => x.Version == semVersion);
+
+            //Get Updates for the set of installed packages
+            var packageUpdates = packageManager.SourceRepository.GetUpdates(getPackage, false, false);
+            
+            return packageUpdates.ToList();
+        }
+
 
     }
 }

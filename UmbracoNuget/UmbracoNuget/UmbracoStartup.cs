@@ -16,22 +16,8 @@ namespace UmbracoNuget
 
             //Add OLD Style Package Event
             InstalledPackage.BeforeDelete += InstalledPackage_BeforeDelete;
-
-            //Get the package manager instance & wire up events
-            var packageManager = PackageManagerService.Instance.PackageManager;
-            packageManager.PackageInstalled += packageManager_PackageInstalled;
-            packageManager.PackageUninstalled += packageManager_PackageUninstalled;
         }
 
-        void packageManager_PackageUninstalled(object sender, NuGet.PackageOperationEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        void packageManager_PackageInstalled(object sender, NuGet.PackageOperationEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
 
         void InstalledPackage_BeforeDelete(InstalledPackage sender, System.EventArgs e)
         {

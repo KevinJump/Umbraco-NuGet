@@ -2,6 +2,7 @@
 	javascript: [
 	    '~/App_Plugins/NuGet/backoffice/Packages/controllers/View.Controller.js',
 		'~/App_Plugins/NuGet/backoffice/Packages/controllers/Browse.Controller.js',
+		'~/App_Plugins/NuGet/backoffice/Packages/controllers/Search.Controller.js',
 		'~/App_Plugins/NuGet/backoffice/Packages/resources/NuGet.Resource.js',
 	],
 	css: []

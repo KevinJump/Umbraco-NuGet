@@ -1,28 +1,23 @@
-﻿<div ng-controller="NuGet.BrowseController">
+﻿<div ng-controller="NuGet.SearchController">
     <div class="umb-pane">
         
-        <div ng-show="isLoading">
-            <h4>Loading...</h4>
-        </div>
-
-
-        <div class="container-fluid" ng-show="!isLoading">
+        <div class="container-fluid">
             
             <div class="row-fluid">
                 <div class="span6">
-                    <h4>Browse Packages</h4>
-                    <h5>{{ packageCount + ' packages' }}</h5>
+                    <h4>Search Packages</h4>
+                    <h5 ng-show="!isLoading">{{ packageCount + ' packages' }}</h5>
                 </div>
                 <div class="span6">
                     <div class="pull-right">
-                        Sort By:
-                        <select name="sortBy" ng-model="sortBy" ng-change="updateSortOrder(sortBy)">
-                            <option value="downloads" selected>Downloads</option>
-                            <option value="recent">Most Recent</option>
-                            <option value="a-z">A to Z</option>
-                        </select>
+                        <input type="search" class="input-medium search-query" ng-model="searchTerm" />
+                        <button type="submit" class="btn" ng-click="performSearch(searchTerm)">Search</button>
                     </div>
                 </div>
+            </div>
+            
+            <div ng-show="isLoading">
+                <h4>Loading...</h4>
             </div>
             
             <div ng-repeat="row in rows">
@@ -43,10 +38,10 @@
             
             <div class="row-fluid">
                 <div class="span6">
-                    <button class="btn" ng-show="prevPageNumber" ng-click="getPage(sortBy, prevPageNumber)">Previous</button>
+                    <button class="btn" ng-show="prevPageNumber" ng-click="getPage(searchTerm, prevPageNumber)">Previous</button>
                 </div>
                 <div class="span6">
-                    <button class="btn pull-right" ng-show="nextPageNumber" ng-click="getPage(sortBy, nextPageNumber)">Next</button>
+                    <button class="btn pull-right" ng-show="nextPageNumber" ng-click="getPage(searchTerm, nextPageNumber)">Next</button>
                 </div>
             </div>
 

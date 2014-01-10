@@ -34,8 +34,33 @@ namespace UmbracoNuget.Services
             //Create a NuGet Package Manager
             PackageManager = new PackageManager(repo, path, fileSystem, localRepo);
 
+            //Wite up events
+            PackageManager.PackageInstalling += PackageManager_PackageInstalling;
+            PackageManager.PackageInstalled += PackageManager_PackageInstalled;
 
-            
+            PackageManager.PackageUninstalling += PackageManager_PackageUninstalling;
+            PackageManager.PackageUninstalled += PackageManager_PackageUninstalled;
+
+        }
+
+        void PackageManager_PackageInstalling(object sender, PackageOperationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void PackageManager_PackageInstalled(object sender, PackageOperationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void PackageManager_PackageUninstalling(object sender, PackageOperationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void PackageManager_PackageUninstalled(object sender, PackageOperationEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public PackageManager PackageManager { get; set; }

@@ -141,7 +141,7 @@ namespace UmbracoNuget.Controllers
             //Search for packages with search term
             var packages = searchPackages
                 .Where(x => x.IsLatestVersion)
-                .OrderByDescending(x => x.Published)
+                .OrderByDescending(x => x.DownloadCount)
                 .Skip(zeroPageIndex * PageSize)
                 .Take(PageSize).ToList();
 
