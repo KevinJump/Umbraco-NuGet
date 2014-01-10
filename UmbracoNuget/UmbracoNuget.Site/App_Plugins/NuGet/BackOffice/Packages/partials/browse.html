@@ -36,17 +36,17 @@
                 </div>
                 <div class="row-fluid">
                     <div class="span4" ng-repeat="package in row.Packages">
-                        <a href="#/NuGet/Packages/view/package?id={{ package.Id }}" class="btn btn-primary">View Package</a>
+                        <a href="#/NuGet/Packages/view/package?id={{ package.Id }}" class="btn">View Package</a>
                     </div>
                 </div>
             </div>
             
             <div class="row-fluid">
                 <div class="span6">
-                    <button class="btn btn-primary" ng-show="prevPageNumber" ng-click="getPage(sortBy, prevPageNumber)">Previous</button>
+                    <button class="btn" ng-show="prevPageNumber" ng-click="getPage(sortBy, prevPageNumber)">Previous</button>
                 </div>
                 <div class="span6">
-                    <button class="btn btn-primary pull-right" ng-show="nextPageNumber" ng-click="getPage(sortBy, nextPageNumber)">Next</button>
+                    <button class="btn pull-right" ng-show="nextPageNumber" ng-click="getPage(sortBy, nextPageNumber)">Next</button>
                 </div>
             </div>
 
