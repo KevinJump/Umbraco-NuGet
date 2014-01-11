@@ -69,6 +69,10 @@ namespace UmbracoNuget.Models
 
         public int DownloadCount { get; set; }
 
+        public int AllDownloadsCount { get; set; }
+
+        public bool IsAlreadyInstalled { get; set; }
+
         public IEnumerable<string> Authors { get; set; }
 
         public DateTimeOffset? Published { get; set; }
@@ -89,9 +93,7 @@ namespace UmbracoNuget.Models
 
         public IEnumerable<PackageDependencySet> DependencySets { get; set; }
 
-        public bool IsAlreadyInstalled { get; set; }
-
-        public int AllDownloadsCount { get; set; }
+        
 
 
     }

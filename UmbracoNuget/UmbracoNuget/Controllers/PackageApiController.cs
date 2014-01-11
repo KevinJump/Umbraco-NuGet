@@ -298,6 +298,16 @@ namespace UmbracoNuget.Controllers
                 totalDownloads += package.DownloadCount;
             }
 
+            bool isInstalled = false;
+
+            //Try & find package in local repo
+            var tryFindInLocalRepo = packageManager.LocalRepository.FindPackage(packageID);
+
+            //Found it - set flag to true
+            if (tryFindInLocalRepo != null)
+            {
+                isInstalled = true;
+            }
 
             //Build up the response we will return
             var packageDetails                          = new PackageDetails();
@@ -311,9 +321,7 @@ namespace UmbracoNuget.Controllers
             packageDetails.DownloadCount                = latestPackage.DownloadCount;
             packageDetails.IconUrl                      = latestPackage.IconUrl;
             packageDetails.Id                           = latestPackage.Id;
-
-            packageDetails.IsAlreadyInstalled           = false; //TODO - Figure out if the package is installed in the local REPO
-
+            packageDetails.IsAlreadyInstalled           = isInstalled;
             packageDetails.LibFiles                     = latestPackage.GetLibFiles();
             packageDetails.PackageAssemblyReferences    = latestPackage.PackageAssemblyReferences;
             packageDetails.ProjectUrl                   = latestPackage.ProjectUrl;
