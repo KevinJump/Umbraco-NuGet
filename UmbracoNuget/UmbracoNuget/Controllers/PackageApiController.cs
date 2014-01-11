@@ -278,16 +278,55 @@ namespace UmbracoNuget.Controllers
         /// </summary>
         /// <param name="packageID"></param>
         /// <returns></returns>
-        public IPackage GetPackageDetail(string packageID)
+        public PackageDetails GetPackageDetail(string packageID)
         {
             //Get Package Manager
             var packageManager = PackageManagerService.Instance.PackageManager;
 
-            //Find the package in the MyGet Repo based on the packageID
-            var findPackage = packageManager.SourceRepository.FindPackage(packageID);
+            //Go & find the package by the ID
+            var findPackages = packageManager.SourceRepository.FindPackagesById(packageID);
+
+            //Latest Package
+            var latestPackage = findPackages.SingleOrDefault(x => x.IsLatestVersion);
+
+            //For each package we find add the download count so we have a total download count
+            var totalDownloads = 0;
+
+            //Loop over all versions of the package
+            foreach (var package in findPackages)
+            {
+                totalDownloads += package.DownloadCount;
+            }
+
+
+            //Build up the response we will return
+            var packageDetails                          = new PackageDetails();
+            packageDetails.AllDownloadsCount            = totalDownloads;
+            packageDetails.AssemblyReferences           = latestPackage.AssemblyReferences;
+            packageDetails.Authors                      = latestPackage.Authors;
+            packageDetails.BuildFiles                   = latestPackage.GetBuildFiles();
+            packageDetails.ContentFiles                 = latestPackage.GetContentFiles();
+            packageDetails.DependencySets               = latestPackage.DependencySets;
+            packageDetails.Description                  = latestPackage.Description;
+            packageDetails.DownloadCount                = latestPackage.DownloadCount;
+            packageDetails.IconUrl                      = latestPackage.IconUrl;
+            packageDetails.Id                           = latestPackage.Id;
+
+            packageDetails.IsAlreadyInstalled           = false; //TODO - Figure out if the package is installed in the local REPO
+
+            packageDetails.LibFiles                     = latestPackage.GetLibFiles();
+            packageDetails.PackageAssemblyReferences    = latestPackage.PackageAssemblyReferences;
+            packageDetails.ProjectUrl                   = latestPackage.ProjectUrl;
+            packageDetails.Published                    = latestPackage.Published;
+            packageDetails.SatelliteFiles               = latestPackage.GetSatelliteFiles();
+            packageDetails.Summary                      = latestPackage.Summary;
+            packageDetails.Tags                         = latestPackage.Tags;
+            packageDetails.Title                        = latestPackage.Title;
+            packageDetails.ToolFiles                    = latestPackage.GetToolFiles();
+            packageDetails.Version                      = latestPackage.Version;
 
             //Return the found package from the repo
-            return findPackage;
+            return packageDetails;
         }
 
     }

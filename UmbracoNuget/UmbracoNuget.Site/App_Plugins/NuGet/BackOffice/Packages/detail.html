@@ -24,14 +24,19 @@
                         <p>
                             {{ package.Description }}
                         </p>
+                        
+                        <!-- Project Url Button -->
+                        <div ng-show="package.ProjectUrl">
+                            <a href="{{ package.ProjectUrl }}" class="btn" target="_blank">View Project</a>
+                        </div>
 
                         <hr/>
                         
                         <h5>TODO</h5>
                         <ul>
                             <li>Icon URL</li>
-                            <li>Display FileSize (So got indication if going to be quick or slow install)</li>
-                            <li>Dipsay Total Downloads for all versions?!</li>
+                            <li>FileSize (So got indication if going to be quick or slow install)</li>
+                            <li>Total Downloads for all versions?!</li>
                             <li>List Tags</li>
                             <li>List Dependencies</li>
                             <li>Updated/Created/Published Date</li>
@@ -49,10 +54,6 @@
                         <h6>Authors: {{ package.Authors }}</h6>
                         <h6>Downloads: {{ package.DownloadCount }}</h6>
 
-                        <!-- Project Url Button -->
-                        <div ng-show="package.ProjectUrl">
-                            <a href="{{ package.ProjectUrl }}" class="btn" target="_blank">View Project</a>
-                        </div>
                     </div>
                 </div>
                 
