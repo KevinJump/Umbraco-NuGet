@@ -38,6 +38,14 @@ namespace UmbracoNuget
             //Try & find package.xml at root of package in Content Files collection
 
             //If so using that package.xml use PackageService
+            var packagingService = ApplicationContext.Current.Services.PackagingService;
+
+            /*
+            packagingService.ImportDataTypeDefinitions();
+            packagingService.ImportTemplates();
+            packagingService.ImportContentTypes();
+            packagingService.ImportContent();
+            */
         }
 
         /// <summary>
