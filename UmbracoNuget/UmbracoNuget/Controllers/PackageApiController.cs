@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Hosting;
 using System.Web.Http;
-using System.Web.Http.Routing;
 using NuGet;
 using Umbraco.Core;
-using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 using UmbracoNuget.Models;
@@ -19,16 +16,14 @@ namespace UmbracoNuget.Controllers
     [PluginController("NuGet")]
     public class PackageApiController : UmbracoApiController
     {
-        public const int PageSize           = 9;
-        public const string NuGetRepoUrl    = "https://packages.nuget.org/api/v2";
-        public const string MyGetRepoUrl    = "https://www.myget.org/F/umbraco-community/";
+        public const int PageSize = 9;
 
         public PackagesResponse GetPackages(string sortBy, int page = 1)
         {
             var zeroPageIndex = page - 1;
 
-            //Connect to the official package repository
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(NuGetRepoUrl);
+            var packageManager  = PackageManagerService.Instance.PackageManager;
+            var repo            = packageManager.SourceRepository;
 
             //Get the number of packages in the repo (latest version)
             //Is there a way - to get this only once as it won't change between pages I hope?!
@@ -132,11 +127,9 @@ namespace UmbracoNuget.Controllers
         {
             var zeroPageIndex = page - 1;
 
-            //Connect to the official package repository
-            IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository(NuGetRepoUrl);
-
-
-            var searchPackages = repo.Search(searchTerm, false);
+            var packageManager  = PackageManagerService.Instance.PackageManager;
+            var repo            = packageManager.SourceRepository;
+            var searchPackages  = repo.Search(searchTerm, false);
 
             //Search for packages with search term
             var packages = searchPackages
@@ -234,7 +227,7 @@ namespace UmbracoNuget.Controllers
         /// <summary>
         /// 
         /// <returns></returns>
-        public bool GetPackageInstall()
+        public bool GetPackageInstall(string packageID, string version)
         {
             //Get Package Manager
             var packageManager = PackageManagerService.Instance.PackageManager;
@@ -244,19 +237,10 @@ namespace UmbracoNuget.Controllers
             //Install package
             try
             {
-                var packageVersion = SemanticVersion.Parse("1.0.0");
+                var packageVersion = SemanticVersion.Parse(version);
 
                 //Install the package...
-                packageManager.InstallPackage("Analytics", packageVersion, false, false);
-
-                var package = packageManager.LocalRepository.FindPackage("Analytics", packageVersion);
-                if (package != null)
-                {
-                    foreach (var packageFile in package.GetContentFiles())
-                    {
-                        var y = packageFile.EffectivePath;
-                    }
-                }
+                packageManager.InstallPackage(packageID, packageVersion, false, false);
 
                 //Set flag to true
                 isInstalled = true;
@@ -266,11 +250,45 @@ namespace UmbracoNuget.Controllers
             {
                 //Some error - set flag to false
                 isInstalled = false;
-                //throw;
             }
 
             //Returned bool if it's installed or not
             return isInstalled;        
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public bool GetPackageUninstall(string packageID, string version)
+        {
+            //Get Package Manager
+            var packageManager = PackageManagerService.Instance.PackageManager;
+
+            bool isUninstalled = false;
+
+            //Install package
+            try
+            {
+                var packageVersion = SemanticVersion.Parse(version);
+
+                //Install the package...
+                packageManager.UninstallPackage(packageID, packageVersion, true, true);
+
+                //Set flag to true
+                isUninstalled = true;
+
+            }
+            catch (Exception)
+            {
+                //Some error - set flag to false
+                isUninstalled = false;
+            }
+
+            //Returned bool if it's uninstalled or not
+            return isUninstalled;      
         }
 
         /// <summary>
@@ -288,6 +306,12 @@ namespace UmbracoNuget.Controllers
 
             //Latest Package
             var latestPackage = findPackages.SingleOrDefault(x => x.IsLatestVersion);
+
+            //Can't find the package from the ID - return Null
+            if (latestPackage == null)
+            {
+                return null;
+            }
 
             //For each package we find add the download count so we have a total download count
             var totalDownloads = 0;
@@ -311,21 +335,21 @@ namespace UmbracoNuget.Controllers
 
             //Build up the response we will return
             var packageDetails                          = new PackageDetails();
-            packageDetails.AllDownloadsCount            = totalDownloads;
+            packageDetails.AllDownloadsCount            = totalDownloads.ToString("##,###,###");
             packageDetails.AssemblyReferences           = latestPackage.AssemblyReferences;
             packageDetails.Authors                      = latestPackage.Authors;
             packageDetails.BuildFiles                   = latestPackage.GetBuildFiles();
             packageDetails.ContentFiles                 = latestPackage.GetContentFiles();
             packageDetails.DependencySets               = latestPackage.DependencySets;
             packageDetails.Description                  = latestPackage.Description;
-            packageDetails.DownloadCount                = latestPackage.DownloadCount;
+            packageDetails.DownloadCount                = latestPackage.DownloadCount.ToString("##,###,###");
             packageDetails.IconUrl                      = latestPackage.IconUrl;
             packageDetails.Id                           = latestPackage.Id;
             packageDetails.IsAlreadyInstalled           = isInstalled;
             packageDetails.LibFiles                     = latestPackage.GetLibFiles();
             packageDetails.PackageAssemblyReferences    = latestPackage.PackageAssemblyReferences;
             packageDetails.ProjectUrl                   = latestPackage.ProjectUrl;
-            packageDetails.Published                    = latestPackage.Published;
+            packageDetails.Published                    = latestPackage.Published.HasValue ? latestPackage.Published.Value.ToString("dd MMMM yyyy @ HH:mm") : string.Empty;
             packageDetails.SatelliteFiles               = latestPackage.GetSatelliteFiles();
             packageDetails.Summary                      = latestPackage.Summary;
             packageDetails.Tags                         = latestPackage.Tags;

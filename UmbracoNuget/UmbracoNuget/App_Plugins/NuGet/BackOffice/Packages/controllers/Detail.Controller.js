@@ -30,6 +30,28 @@
             $scope.package = response.data;
         });
 
-        //notificationsService.success("Package ID", packageID);
+        //Install Button Clicked
+        $scope.installPackage = function (packageID, version) {
+
+            $scope.isInstalling = true;
+
+            nugetResource.installPackage(packageID, version).then(function (response) {
+
+                //Package is installed
+                $scope.isInstalling = false;
+
+                //Get response from api (returns true or false)
+                var wasPackagedInstalled = response.data;
+
+                //Show success or error notification message
+                if (wasPackagedInstalled) {
+                    notificationsService.success("Installed Package from Repo", packageID);
+                }
+                else {
+                    notificationsService.error("Problem Installing Package from Repo", packageID);
+                }
+               
+            });
+        };
 
     });

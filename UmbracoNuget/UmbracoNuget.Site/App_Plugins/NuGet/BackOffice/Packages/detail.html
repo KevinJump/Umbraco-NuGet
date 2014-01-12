@@ -25,45 +25,116 @@
                             {{ package.Description }}
                         </p>
                         
-                        <!-- Project Url Button -->
-                        <div ng-show="package.ProjectUrl">
-                            <a href="{{ package.ProjectUrl }}" class="btn" target="_blank">View Project</a>
+                        <!-- Project Url & Install Button (if not installed) -->
+                        <div class="umb-tab-buttons">
+                            <div class="btn-group">
+                                <a href="{{ package.ProjectUrl }}" class="btn" target="_blank" ng-show="package.ProjectUrl">View Project</a>
+                                <button ng-show="!IsAlreadyInstalled" class="btn btn-primary" data-hotkey="ctrl+i" ng-click="installPackage(package.Id, package.Version)">Install Package</button>
+                            </div>
                         </div>
 
-                        <hr/>
+                        <hr />
                         
-                        <h5>TODO</h5>
-                        <ul>
-                            <li>Icon URL</li>
-                            <li>FileSize (So got indication if going to be quick or slow install)</li>
-                            <li>Total Downloads for all versions?!</li>
-                            <li>List Tags</li>
-                            <li>List Dependencies</li>
-                            <li>Updated/Created/Published Date</li>
-                            <li>List Previous Version & Download Counts for versions?</li>
+                        <div ng-show="package.BuildFiles">
+                            <h4>Build Files</h4>
+                            <ul>
+                                <li ng-repeat="file in package.BuildFiles">
+                                    {{ file.EffectivePath }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div ng-show="package.ContentFiles">
+                            <h4>Content Files</h4>
+                            <ul>
+                                <li ng-repeat="file in package.ContentFiles">
+                                    {{ file.EffectivePath }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div ng-show="package.LibFiles">
+                            <h4>Lib Files</h4>
+                            <ul>
+                                <li ng-repeat="file in package.LibFiles">
+                                    {{ file.EffectivePath }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div ng-show="package.SatelliteFiles">
+                            <h4>Satellite Files</h4>
+                            <ul>
+                                <li ng-repeat="file in package.SatelliteFiles">
+                                    {{ file.EffectivePath }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div ng-show="package.ToolFiles">
+                            <h4>Tool Files</h4>
+                            <ul>
+                                <li ng-repeat="file in package.ToolFiles">
+                                    {{ file.EffectivePath }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div ng-show="package.PackageAssemblyReferences">
+                            <h4>Package Assembly References</h4>
+                            <ul>
+                                <li ng-repeat="ref in package.PackageAssemblyReferences">
+                                    {{ ref.Name }}
+                                </li>
+                            </ul>
+                        </div>
 
-                            <li>LOADING Bar - when installing - hide when done & show Installed message instead</li>
-                        </ul>
+                        <div ng-show="package.AssemblyReferences">
+                            <h4>Assembly References</h4>
+                            <ul>
+                                <li ng-repeat="ref in package.AssemblyReferences">
+                                    {{ ref.Name }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div ng-show="package.DependencySets">
+                            <h4>Dependencies</h4>
+                            <ul>
+                                <li ng-repeat="dependancy in package.DependencySets.Dependencies">
+                                    {{ dependancy.Id }}<br />
+                                    Min Version{{ dependancy.VersionSpec.MinVersion }}<br />
+                                    Max Version {{ dependancy.VersionSpec.MaxVersion }}
+                                </li>
+                            </ul>
+                        </div>
 
                     </div>
 
                     <!-- Meta SideBar -->
                     <div class="span3 offset1">
+                        <div ng-show="package.IconUrl">
+                            <img src="{{ package.IconUrl }}" />
+                        </div>
+
                         <h6>Package ID: {{ package.Id }}</h6>
                         <h6>Version {{ package.Version }}</h6>
-                        <h6>Authors: {{ package.Authors }}</h6>
-                        <h6>Downloads: {{ package.DownloadCount }}</h6>
+                        <div ng-show="package.Authors">
+                            <h6>Authors:</h6>
+                            <ul>
+                                <li ng-repeat="author in package.Authors">
+                                    {{ author }}
+                                </li>
+                            </ul>
+                        </div>
+                        <h6>Published: {{ package.Published }}</h6>
 
+                        <h6>Downloads: {{ package.DownloadCount }}</h6>
+                        <h6>Total Downloads: {{ package.AllDownloadsCount }}</h6>
+                        <h6 ng-show="package.Tags">Tags: {{ package.Tags }}</h6>
                     </div>
                 </div>
                 
-                <!-- Buttons -->
-                <div class="umb-tab-buttons">
-                    <div class="btn-group">
-                        <button class="btn btn-primary" data-hotkey="ctrl+i" ng-click="installPackage(packageID)">Install Package</button>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

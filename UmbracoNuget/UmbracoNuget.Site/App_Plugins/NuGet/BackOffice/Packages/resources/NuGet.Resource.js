@@ -21,6 +21,13 @@
                 return $http.get("NuGet/PackageApi/GetPackageDetail?packageID=" + packageID);
             },
 
+            installPackage: function (packageID, version) {
+                return $http.get("NuGet/PackageApi/GetPackageInstall?packageID=" + packageID + "&version=" + version);
+            },
+
+            uninstallPackage: function (packageID, version) {
+                return $http.get("NuGet/PackageApi/GetPackageUninstall?packageID=" + packageID + "&version=" + version);
+            },
             
         };
     });

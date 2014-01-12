@@ -67,15 +67,15 @@ namespace UmbracoNuget.Models
 
         public Uri IconUrl { get; set; }
 
-        public int DownloadCount { get; set; }
+        public string DownloadCount { get; set; }
 
-        public int AllDownloadsCount { get; set; }
+        public string AllDownloadsCount { get; set; }
 
         public bool IsAlreadyInstalled { get; set; }
 
         public IEnumerable<string> Authors { get; set; }
 
-        public DateTimeOffset? Published { get; set; }
+        public string Published { get; set; }
 
         public IEnumerable<IPackageFile> BuildFiles { get; set; } 
 
