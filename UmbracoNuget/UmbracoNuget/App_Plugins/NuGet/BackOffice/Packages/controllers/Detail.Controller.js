@@ -6,6 +6,9 @@
 
         //Set isInstalling to false on init
         $scope.isInstalling = false;
+
+        //Set isUninstalling to false on init
+        $scope.isUninstalling = false;
        
 
         //Get the PackageID - in this case the ID of the URL/Route
@@ -44,6 +47,54 @@
                     notificationsService.error("Problem Installing Package from Repo", packageID);
                 }
                
+            });
+        };
+
+        //Update Package Button Clicked
+        $scope.updatePackage = function (packageID, version) {
+
+            $scope.isInstalling = true;
+
+            nugetResource.updatePackage(packageID, version).then(function (response) {
+
+                //Package is installed/updated
+                $scope.isInstalling = false;
+
+                //Get response from api (returns true or false)
+                var wasPackagedInstalled = response.data;
+
+                //Show success or error notification message
+                if (wasPackagedInstalled) {
+                    notificationsService.success("Installed Package Update from Repo", packageID);
+                }
+                else {
+                    notificationsService.error("Problem Installing Package Update from Repo", packageID);
+                }
+
+            });
+        };
+
+        //Uninstall Package Button Clicked
+        $scope.uninstallPackage = function (packageID, version) {
+
+            $scope.isUninstalling = true;
+
+            nugetResource.uninstallPackage(packageID, version).then(function (response) {
+
+                //Package is installed/updated
+                $scope.isUninstalling = false;
+
+                //Get response from api (returns true or false)
+                var wasPackagedUninstalled = response.data;
+
+                //Show success or error notification message
+                if (wasPackagedUninstalled) {
+                    notificationsService.success("Uninstalled Package from Repo", packageID);
+                }
+                else {
+                    notificationsService.error("Problem Uninstalling Package from Repo", packageID);
+                }
+
             });
         };
 

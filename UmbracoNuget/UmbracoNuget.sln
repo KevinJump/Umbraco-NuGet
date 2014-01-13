@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3144A9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoNuget", "UmbracoNuget\UmbracoNuget.csproj", "{7B256DCE-8FC1-433C-B6DA-9E558C81D216}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoNuget.NightlySite", "UmbracoNuget.NightlySite\UmbracoNuget.NightlySite.csproj", "{07D7D5B8-9815-4B0F-9791-621BD1FD76DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{7B256DCE-8FC1-433C-B6DA-9E558C81D216}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B256DCE-8FC1-433C-B6DA-9E558C81D216}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B256DCE-8FC1-433C-B6DA-9E558C81D216}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07D7D5B8-9815-4B0F-9791-621BD1FD76DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07D7D5B8-9815-4B0F-9791-621BD1FD76DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07D7D5B8-9815-4B0F-9791-621BD1FD76DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07D7D5B8-9815-4B0F-9791-621BD1FD76DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

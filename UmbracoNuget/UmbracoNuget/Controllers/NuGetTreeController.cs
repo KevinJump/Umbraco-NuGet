@@ -15,11 +15,45 @@ namespace UmbracoNuget.Controllers
     [PluginController("NuGet")]
     public class NuGetTreeController : TreeController
     {
-        public const string mainRoute = "/NuGet/Packages";
+        public const string mainRoute = "/nuget/Packages";
 
         protected override MenuItemCollection GetMenuForNode(string id, FormDataCollection queryStrings)
         {
+            //check if we're rendering the root node's children
+            if (id == Constants.System.Root.ToInvariantString())
+            {
+                var menu = new MenuItemCollection();
+
+                var m = new MenuItem("drink", "Drink");
+                m.Icon = "wine-glass";
+                m.LaunchDialogView("hello.html", "My Dialog Title");
+                menu.Items.Add(m);
+
+                var p = new MenuItem("per", "Per");
+                p.Icon = "wine-glass";
+                p.LaunchDialogUrl("http://google.co.uk", "Off to Google...");
+                menu.Items.Add(p);
+
+                var n = new MenuItem("niels", "Niels");
+                n.Icon = "wine-glass";
+                n.ExecuteLegacyJs("alert('hello niels');");
+                menu.Items.Add(n);
+
+                var t = new MenuItem("tim", "Tim");
+                t.Icon = "wine-glass";
+                t.NavigateToRoute("hello-world.html");
+                menu.Items.Add(t);
+
+                var x = new MenuItem("detox", "Detox");
+                x.Icon = "medicine";
+                menu.Items.Add(x);
+
+                return menu;
+            }
+
+            //if not the root node (aka NuGet Packages root tree item) do nothing
             return null;
+
         }
 
         /// <summary>
@@ -83,7 +117,7 @@ namespace UmbracoNuget.Controllers
             if (PackageHelper.HasInstalledPackages())
             {
                 //Add installed packages item to tree
-                treeNodes.Add(new SectionTreeNode() { Id = "installed", Title = "Installed Packages", Icon = "icon-box", Route = string.Format("{0}/view/{1}", mainRoute, "installed"), HasChildren = true });
+                treeNodes.Add(new SectionTreeNode() { Id = "installed", Title = "Installed Packages", Icon = "icon-box", Route = string.Format("{0}/list/{1}", mainRoute, "installed"), HasChildren = true });
             }
 
             //treeNodes.Add(new SectionTreeNode() { Id = "local", Title = "Install Local Package", Icon = "icon-cloud-upload", Route = string.Format("{0}/view/{1}", mainRoute, "local"), HasChildren = false });
@@ -107,7 +141,8 @@ namespace UmbracoNuget.Controllers
 
             foreach (var package in installedPackages)
             {
-                treeNodes.Add(new SectionTreeNode() { Id = package.Id, Title = package.Title, Icon = "icon-box-open", Route = string.Format("{0}/view/{1}", mainRoute, "installed-package"), HasChildren = false });
+                //NuGet/Packages/detail/jQuery
+                treeNodes.Add(new SectionTreeNode() { Id = package.Id, Title = package.Title, Icon = "icon-box-open", Route = string.Format("{0}/detail/{1}", mainRoute, package.Id), HasChildren = false });
             }
 
             return treeNodes;

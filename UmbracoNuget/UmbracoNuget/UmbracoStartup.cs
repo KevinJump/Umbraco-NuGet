@@ -42,6 +42,8 @@ namespace UmbracoNuget
 
             /*
             packagingService.ImportDataTypeDefinitions();
+            packagingService.ImportLanguages();
+            packagingService.ImportDictionaryItems();
             packagingService.ImportTemplates();
             packagingService.ImportContentTypes();
             packagingService.ImportContent();

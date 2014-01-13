@@ -28,6 +28,10 @@
             uninstallPackage: function (packageID, version) {
                 return $http.get("NuGet/PackageApi/GetPackageUninstall?packageID=" + packageID + "&version=" + version);
             },
+
+            updatePackage: function (packageID, version) {
+                return $http.get("NuGet/PackageApi/GetPackageUpdate?packageID=" + packageID + "&version=" + version);
+            },
             
         };
     });
