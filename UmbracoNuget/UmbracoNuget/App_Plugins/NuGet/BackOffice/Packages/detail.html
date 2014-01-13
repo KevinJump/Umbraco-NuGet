@@ -4,16 +4,20 @@
             <h1>NuGet Package Repository</h1>
         </div>
     </umb-header>
-    
+
 
     <div class="umb-panel-body">
         <div class="umb-pane">
-            
+
             <div ng-show="isLoading">
                 <h3>Loading...</h3>
             </div>
             
-            <div ng-show="!isLoading">
+            <div ng-show="isInstalling">
+                <h3>Installing. Please Wait</h3>
+            </div>
+
+            <div ng-show="!isLoading && !isInstalling">
 
                 <h2>{{ package.Title }}</h2>
 
@@ -24,17 +28,21 @@
                         <p>
                             {{ package.Description }}
                         </p>
-                        
+
                         <!-- Project Url & Install Button (if not installed) -->
+                        <!-- Update package (if installed & has updates) -->
+                        <!-- Unistall Package if already installed -->
                         <div class="umb-tab-buttons">
                             <div class="btn-group">
                                 <a href="{{ package.ProjectUrl }}" class="btn" target="_blank" ng-show="package.ProjectUrl">View Project</a>
-                                <button ng-show="!IsAlreadyInstalled" class="btn btn-primary" data-hotkey="ctrl+i" ng-click="installPackage(package.Id, package.Version)">Install Package</button>
+                                <button ng-show="IsAlreadyInstalled" class="btn btn-primary" data-hotkey="ctrl+u" ng-click="uninstallPackage(package.Id, package.Version)">Uninstall Package</button>
+                                <button ng-show="HasAnUpdate" class="btn btn-primary" data-hotkey="ctrl+u" ng-click="updatePackage(package.Id, package.Version)">Update Package</button>
+                                <button ng-show="IsAlreadyInstalled" class="btn btn-primary" data-hotkey="ctrl+shift+u" ng-click="uninstallPackage(package.Id, package.Version)">Uninstall Package</button>
                             </div>
                         </div>
 
                         <hr />
-                        
+
                         <div ng-show="package.BuildFiles">
                             <h4>Build Files</h4>
                             <ul>
@@ -43,7 +51,7 @@
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <div ng-show="package.ContentFiles">
                             <h4>Content Files</h4>
                             <ul>
@@ -52,7 +60,7 @@
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <div ng-show="package.LibFiles">
                             <h4>Lib Files</h4>
                             <ul>
@@ -61,7 +69,7 @@
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <div ng-show="package.SatelliteFiles">
                             <h4>Satellite Files</h4>
                             <ul>
@@ -70,7 +78,7 @@
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <div ng-show="package.ToolFiles">
                             <h4>Tool Files</h4>
                             <ul>
@@ -79,7 +87,7 @@
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <div ng-show="package.PackageAssemblyReferences">
                             <h4>Package Assembly References</h4>
                             <ul>
@@ -97,8 +105,8 @@
                                 </li>
                             </ul>
                         </div>
-                        
-                        <div ng-show="package.DependencySets">
+
+                        <div ng-show="package.DependencySets.Dependencies">
                             <h4>Dependencies</h4>
                             <ul>
                                 <li ng-repeat="dependancy in package.DependencySets.Dependencies">
@@ -134,7 +142,7 @@
                         <h6 ng-show="package.Tags">Tags: {{ package.Tags }}</h6>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>

@@ -333,6 +333,16 @@ namespace UmbracoNuget.Controllers
                 isInstalled = true;
             }
 
+            bool hasAnUpdate = false;
+
+            //Only try to check if package has an update if it's installed
+            //No point checkiing otherwise
+            if (isInstalled)
+            {
+                //Run helper to see if package has an update
+                hasAnUpdate = PackageHelper.PackageHasUpdates(tryFindInLocalRepo.Id, tryFindInLocalRepo.Version.ToString());
+            }
+
             //Build up the response we will return
             var packageDetails                          = new PackageDetails();
             packageDetails.AllDownloadsCount            = totalDownloads.ToString("##,###,###");
@@ -343,6 +353,7 @@ namespace UmbracoNuget.Controllers
             packageDetails.DependencySets               = latestPackage.DependencySets;
             packageDetails.Description                  = latestPackage.Description;
             packageDetails.DownloadCount                = latestPackage.DownloadCount.ToString("##,###,###");
+            packageDetails.HasAnUpdate                  = hasAnUpdate;
             packageDetails.IconUrl                      = latestPackage.IconUrl;
             packageDetails.Id                           = latestPackage.Id;
             packageDetails.IsAlreadyInstalled           = isInstalled;

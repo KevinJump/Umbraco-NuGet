@@ -71,11 +71,13 @@ namespace UmbracoNuget.Models
 
         public string AllDownloadsCount { get; set; }
 
-        public bool IsAlreadyInstalled { get; set; }
-
         public IEnumerable<string> Authors { get; set; }
 
         public string Published { get; set; }
+
+        public bool IsAlreadyInstalled { get; set; }
+
+        public bool HasAnUpdate { get; set; }
 
         public IEnumerable<IPackageFile> BuildFiles { get; set; } 
 

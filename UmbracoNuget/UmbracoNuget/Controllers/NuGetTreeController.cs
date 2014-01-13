@@ -50,12 +50,6 @@ namespace UmbracoNuget.Controllers
                 treeNodes = GetInstalledPackagesTreeItems();
             }
 
-            //Check if we are rendering the updates tree
-            if (id == "updates")
-            {
-                treeNodes = GetPackageUpdatesTreeItems();
-            }
-
 
             //Create tree nodes
             if (treeNodes.Any())
@@ -90,12 +84,6 @@ namespace UmbracoNuget.Controllers
             {
                 //Add installed packages item to tree
                 treeNodes.Add(new SectionTreeNode() { Id = "installed", Title = "Installed Packages", Icon = "icon-box", Route = string.Format("{0}/view/{1}", mainRoute, "installed"), HasChildren = true });
-
-                //Add package updates item to tree if we have updates available
-                if (PackageHelper.HasUpdates())
-                {
-                    treeNodes.Add(new SectionTreeNode() { Id = "updates", Title = "Package Updates", Icon = "icon-cloud-upload", Route = string.Format("{0}/view/{1}", mainRoute, "updates"), HasChildren = true });
-                }
             }
 
             //treeNodes.Add(new SectionTreeNode() { Id = "local", Title = "Install Local Package", Icon = "icon-cloud-upload", Route = string.Format("{0}/view/{1}", mainRoute, "local"), HasChildren = false });
@@ -120,26 +108,6 @@ namespace UmbracoNuget.Controllers
             foreach (var package in installedPackages)
             {
                 treeNodes.Add(new SectionTreeNode() { Id = package.Id, Title = package.Title, Icon = "icon-box-open", Route = string.Format("{0}/view/{1}", mainRoute, "installed-package"), HasChildren = false });
-            }
-
-            return treeNodes;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public List<SectionTreeNode> GetPackageUpdatesTreeItems()
-        {
-            //Add nodes
-            var treeNodes = new List<SectionTreeNode>();
-
-            //Get package updates
-            var packageUpdates = PackageHelper.ListPackageUpdates();
-
-            foreach (var package in packageUpdates)
-            {
-                treeNodes.Add(new SectionTreeNode() { Id = package.Id, Title = package.Title, Icon = "icon-box-open", Route = string.Format("{0}/view/{1}", mainRoute, "update"), HasChildren = false });
             }
 
             return treeNodes;

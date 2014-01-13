@@ -4,16 +4,9 @@
         //Set isLoading to true on init
         $scope.isLoading = true;
 
-        //Get the RouteParams
-        /*
-            {
-                section: "NuGet", 
-                tree: "Packages", 
-                method: "detail", 
-                id: "jQuery"
-            } 
-        */
-        console.log($routeParams);
+        //Set isInstalling to false on init
+        $scope.isInstalling = false;
+       
 
         //Get the PackageID - in this case the ID of the URL/Route
         //http://localhost:64700/umbraco/#/NuGet/Packages/detail/jQuery
