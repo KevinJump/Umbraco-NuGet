@@ -79,7 +79,8 @@ namespace UmbracoNuget
         /// <param name="e"></param>
         void packageManger_PackageUninstalled(object sender, NuGet.PackageOperationEventArgs e)
         {
-
+            //Remove the package files
+            e.Package.RemovePackageFiles();
         }
 
 

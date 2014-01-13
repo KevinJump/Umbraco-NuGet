@@ -44,8 +44,6 @@ namespace UmbracoNuget.Models
 
         public string DownloadCount { get; set; }
 
-        public string AllDownloadsCount { get; set; }
-
         public IEnumerable<string> Authors { get; set; }
 
         public DateTimeOffset? Published { get; set; }

@@ -90,7 +90,6 @@ namespace UmbracoNuget.Controllers
                     packageToAdd.Authors            = package.Authors;
                     packageToAdd.Description        = package.Description;
                     packageToAdd.DownloadCount      = package.DownloadCount.ToString("##,###,###");
-                    packageToAdd.AllDownloadsCount  = package.GetTotalDownloads();
                     packageToAdd.IconUrl            = package.IconUrl;
                     packageToAdd.Id                 = package.Id;
                     packageToAdd.ProjectUrl         = package.ProjectUrl;
@@ -165,7 +164,6 @@ namespace UmbracoNuget.Controllers
                     packageToAdd.Authors            = package.Authors;
                     packageToAdd.Description        = package.Description;
                     packageToAdd.DownloadCount      = package.DownloadCount.ToString("##,###,###");
-                    packageToAdd.AllDownloadsCount  = package.GetTotalDownloads();
                     packageToAdd.IconUrl            = package.IconUrl;
                     packageToAdd.Id                 = package.Id;
                     packageToAdd.ProjectUrl         = package.ProjectUrl;

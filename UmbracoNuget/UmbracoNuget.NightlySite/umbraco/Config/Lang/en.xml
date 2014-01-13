@@ -731,6 +731,7 @@ To manage your website, simply open the umbraco back office and start adding con
     <key alias="contour" version="4.0">Umbraco Contour</key>
     <key alias="help" version="7.0">Help</key>
     <key alias="nuget">NuGet</key>
+    <key alias="analytics">Analytics</key>
   </area>
   <area alias="settings">
     <key alias="defaulttemplate">Default template</key>
@@ -937,6 +938,7 @@ To manage your website, simply open the umbraco back office and start adding con
     <key alias="templates">Templates</key>
     <key alias="xslt">XSLT Files</key>
     <key alias="nuget">NuGet</key>
+    <key alias="analytics">Analytics</key>
   </area>
   <area alias="update">
     <key alias="updateAvailable">New update ready</key>

@@ -188,12 +188,38 @@ namespace UmbracoNuget.Helpers
             {
                 //Remove File from disk
 
+                //Remove File that its package from disk
+                var fileLocation = file.EffectivePath;
+
+                //Map Path from location
+                var mappedFileLocation = HostingEnvironment.MapPath("~/" + fileLocation);
+
+                //Ensure file exists on disk
+                if (File.Exists(mappedFileLocation))
+                {
+                    //It exists - so let's delete it
+                    File.Delete(mappedFileLocation);
+                }
             }
 
             //For Lib files (aka /bin)
             foreach (var file in package.GetLibFiles())
             {
                 //Remove File from to /bin folder
+
+                //Copy File from package to /bin folder
+                var fileLocation = file.EffectivePath;
+
+                //Map Path from location
+                var mappedFileLocation = HostingEnvironment.MapPath("~/bin/" + fileLocation);
+
+                //Ensure directory exists (I hope so as it's the /bin folder)
+                if (!Directory.Exists(Path.GetDirectoryName(mappedFileLocation)))
+                {
+                    //Directory does NOT exist
+                    //Create it
+                    Directory.CreateDirectory(Path.GetDirectoryName(mappedFileLocation));
+                }
             }
         }
 
