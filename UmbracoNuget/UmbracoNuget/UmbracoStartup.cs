@@ -1,5 +1,6 @@
 ﻿using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
+using UmbracoNuget.Helpers;
 using UmbracoNuget.Services;
 
 namespace UmbracoNuget
@@ -57,7 +58,8 @@ namespace UmbracoNuget
         /// <param name="e"></param>
         void packageManger_PackageInstalled(object sender, NuGet.PackageOperationEventArgs e)
         {
-
+            //Copy the package files out to the correct locations
+            e.Package.CopyPackageFiles();
         }
 
         /// <summary>

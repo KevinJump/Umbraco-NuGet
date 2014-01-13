@@ -66,9 +66,17 @@
                 //Show success or error notification message
                 if (wasPackagedInstalled) {
                     notificationsService.success("Installed Package Update from Repo", packageID);
+
+                    //Set Package Already installed to true
+                    $scope.package.IsAlreadyInstalled   = true;
+                    $scope.package.HasAnUpdate          = false;
+
                 }
                 else {
                     notificationsService.error("Problem Installing Package Update from Repo", packageID);
+
+                    $scope.package.IsAlreadyInstalled   = false;
+                    $scope.package.HasAnUpdate          = false;
                 }
 
             });

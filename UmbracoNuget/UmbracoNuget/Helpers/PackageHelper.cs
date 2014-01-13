@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using NuGet;
 using UmbracoNuget.Services;
 
@@ -115,6 +117,87 @@ namespace UmbracoNuget.Helpers
 
             return totalDownloads.ToString("##,###,###");
         }
+
+
+        public static void CopyPackageFiles(this IPackage package)
+        {
+            //For Content Files Copy the files to the correct places
+            foreach (var file in package.GetContentFiles())
+            {
+                //Copy File from package to correct location on disk
+                var fileLocation = file.EffectivePath;
+
+                //Map Path from location
+                var mappedFileLocation = HostingEnvironment.MapPath("~/" + fileLocation);
+
+                //Ensure directory exists
+                if (!Directory.Exists(Path.GetDirectoryName(mappedFileLocation)))
+                {
+                    //Directory does NOT exist
+                    //Create it
+                    Directory.CreateDirectory(Path.GetDirectoryName(mappedFileLocation));
+                }
+                
+                //Get File Contents
+                var fileContents = file.GetStream();
+
+                //Save file to disk
+                //http://stackoverflow.com/questions/411592/how-do-i-save-a-stream-to-a-file
+                using (var fileStream = File.Create(mappedFileLocation))
+                {
+                    fileContents.CopyTo(fileStream);
+                }
+
+            }
+
+            //For Lib files (aka /bin)
+            foreach (var file in package.GetLibFiles())
+            {
+                //Copy File from package to /bin folder
+                var fileLocation = file.EffectivePath;
+
+                //Map Path from location
+                var mappedFileLocation = HostingEnvironment.MapPath("~/bin/" + fileLocation);
+
+                //Ensure directory exists (I hope so as it's the /bin folder)
+                if (!Directory.Exists(Path.GetDirectoryName(mappedFileLocation)))
+                {
+                    //Directory does NOT exist
+                    //Create it
+                    Directory.CreateDirectory(Path.GetDirectoryName(mappedFileLocation));
+                }
+
+                //Get File Contents
+                var fileContents = file.GetStream();
+
+                //Save file to disk
+                //http://stackoverflow.com/questions/411592/how-do-i-save-a-stream-to-a-file
+                using (var fileStream = File.Create(mappedFileLocation))
+                {
+                    fileContents.CopyTo(fileStream);
+                }
+
+
+            }
+        }
+
+        public static void RemovePackageFiles(this IPackage package)
+        {
+            //For Content Files remove the files off disk
+            foreach (var file in package.GetContentFiles())
+            {
+                //Remove File from disk
+
+            }
+
+            //For Lib files (aka /bin)
+            foreach (var file in package.GetLibFiles())
+            {
+                //Remove File from to /bin folder
+            }
+        }
+
+
 
 
     }
