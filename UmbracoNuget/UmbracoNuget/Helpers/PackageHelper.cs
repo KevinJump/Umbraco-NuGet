@@ -92,6 +92,30 @@ namespace UmbracoNuget.Helpers
             return packageUpdates.ToList();
         }
 
+        public static string GetTotalDownloads(this IPackage packge)
+        {
+            var packageManager = PackageManagerService.Instance.PackageManager;
+
+            //Go & find the package by the ID
+            var findPackages = packageManager.SourceRepository.FindPackagesById(packge.Id);
+
+            if (findPackages == null)
+            {
+                return string.Empty;
+            }
+
+            //For each package we find add the download count so we have a total download count
+            var totalDownloads = 0;
+
+            //Loop over all versions of the package
+            foreach (var package in findPackages)
+            {
+                totalDownloads += package.DownloadCount;
+            }
+
+            return totalDownloads.ToString("##,###,###");
+        }
+
 
     }
 }

@@ -42,7 +42,9 @@ namespace UmbracoNuget.Models
 
         public Uri IconUrl { get; set; }
 
-        public int DownloadCount { get; set; }
+        public string DownloadCount { get; set; }
+
+        public string AllDownloadsCount { get; set; }
 
         public IEnumerable<string> Authors { get; set; }
 

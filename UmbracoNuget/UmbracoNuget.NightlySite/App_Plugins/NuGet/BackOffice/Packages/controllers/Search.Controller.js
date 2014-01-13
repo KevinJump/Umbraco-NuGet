@@ -1,8 +1,8 @@
 ﻿angular.module("umbraco").controller("NuGet.SearchController",
     function ($scope, nugetResource) {
 
-        //Set is loading flag until JSON comes back from oData call
-        $scope.isLoading = true;
+        //Set is loading (on init set to false)
+        $scope.isLoading = false;
 
         //When search button is clicked
         $scope.performSearch = function (searchTerm) {

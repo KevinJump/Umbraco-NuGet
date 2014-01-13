@@ -20,6 +20,8 @@ namespace UmbracoNuget.Controllers
         protected override MenuItemCollection GetMenuForNode(string id, FormDataCollection queryStrings)
         {
             //check if we're rendering the root node's children
+            //Comment out testing code
+            /*
             if (id == Constants.System.Root.ToInvariantString())
             {
                 var menu = new MenuItemCollection();
@@ -50,6 +52,7 @@ namespace UmbracoNuget.Controllers
 
                 return menu;
             }
+            */
 
             //if not the root node (aka NuGet Packages root tree item) do nothing
             return null;

@@ -6,6 +6,7 @@ using NuGet;
 using Umbraco.Core;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
+using UmbracoNuget.Helpers;
 using UmbracoNuget.Models;
 using UmbracoNuget.Services;
 using PackageHelper = UmbracoNuget.Helpers.PackageHelper;
@@ -85,18 +86,19 @@ namespace UmbracoNuget.Controllers
 
                 foreach (IPackage package in row)
                 {
-                    var packageToAdd            = new Package();
-                    packageToAdd.Authors        = package.Authors;
-                    packageToAdd.Description    = package.Description;
-                    packageToAdd.DownloadCount  = package.DownloadCount;
-                    packageToAdd.IconUrl        = package.IconUrl;
-                    packageToAdd.Id             = package.Id;
-                    packageToAdd.ProjectUrl     = package.ProjectUrl;
-                    packageToAdd.Published      = package.Published;
-                    packageToAdd.Summary        = package.Summary;
-                    packageToAdd.Tags           = package.Tags;
-                    packageToAdd.Title          = package.Title;
-                    packageToAdd.Version        = package.Version;
+                    var packageToAdd                = new Package();
+                    packageToAdd.Authors            = package.Authors;
+                    packageToAdd.Description        = package.Description;
+                    packageToAdd.DownloadCount      = package.DownloadCount.ToString("##,###,###");
+                    packageToAdd.AllDownloadsCount  = package.GetTotalDownloads();
+                    packageToAdd.IconUrl            = package.IconUrl;
+                    packageToAdd.Id                 = package.Id;
+                    packageToAdd.ProjectUrl         = package.ProjectUrl;
+                    packageToAdd.Published          = package.Published;
+                    packageToAdd.Summary            = package.Summary;
+                    packageToAdd.Tags               = package.Tags;
+                    packageToAdd.Title              = package.Title;
+                    packageToAdd.Version            = package.Version;
 
                     //Add the package to the row object
                     packagesInRow.Add(packageToAdd);
@@ -159,18 +161,19 @@ namespace UmbracoNuget.Controllers
 
                 foreach (IPackage package in row)
                 {
-                    var packageToAdd            = new Package();
-                    packageToAdd.Authors        = package.Authors;
-                    packageToAdd.Description    = package.Description;
-                    packageToAdd.DownloadCount  = package.DownloadCount;
-                    packageToAdd.IconUrl        = package.IconUrl;
-                    packageToAdd.Id             = package.Id;
-                    packageToAdd.ProjectUrl     = package.ProjectUrl;
-                    packageToAdd.Published      = package.Published;
-                    packageToAdd.Summary        = package.Summary;
-                    packageToAdd.Tags           = package.Tags;
-                    packageToAdd.Title          = package.Title;
-                    packageToAdd.Version        = package.Version;
+                    var packageToAdd                = new Package();
+                    packageToAdd.Authors            = package.Authors;
+                    packageToAdd.Description        = package.Description;
+                    packageToAdd.DownloadCount      = package.DownloadCount.ToString("##,###,###");
+                    packageToAdd.AllDownloadsCount  = package.GetTotalDownloads();
+                    packageToAdd.IconUrl            = package.IconUrl;
+                    packageToAdd.Id                 = package.Id;
+                    packageToAdd.ProjectUrl         = package.ProjectUrl;
+                    packageToAdd.Published          = package.Published;
+                    packageToAdd.Summary            = package.Summary;
+                    packageToAdd.Tags               = package.Tags;
+                    packageToAdd.Title              = package.Title;
+                    packageToAdd.Version            = package.Version;
 
                     //Add the package to the row object
                     packagesInRow.Add(packageToAdd);
