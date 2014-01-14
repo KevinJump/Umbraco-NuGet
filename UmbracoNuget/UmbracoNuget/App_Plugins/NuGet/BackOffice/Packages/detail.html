@@ -12,11 +12,11 @@
             <div ng-show="isLoading">
                 <h3>Loading...</h3>
             </div>
-            
+
             <div ng-show="isInstalling">
                 <h3>Installing. Please Wait</h3>
             </div>
-            
+
             <div ng-show="isUninstalling">
                 <h3>Uninstalling. Please Wait</h3>
             </div>
@@ -110,15 +110,21 @@
                             </ul>
                         </div>
 
-                        <div ng-show="package.DependencySets.Dependencies">
-                            <h4>Dependencies</h4>
-                            <ul>
-                                <li ng-repeat="dependancy in package.DependencySets.Dependencies">
-                                    {{ dependancy.Id }}<br />
-                                    Min Version{{ dependancy.VersionSpec.MinVersion }}<br />
-                                    Max Version {{ dependancy.VersionSpec.MaxVersion }}
-                                </li>
-                            </ul>
+                        <div ng-show="package.DependencySets">
+                            <div ng-repeat="dependancyset in package.DependencySets">
+                                <div ng-show="dependancyset.Dependencies">
+                                    <h3>Dependencies</h3>
+
+                                    <div ng-repeat="dependancy in dependancyset.Dependencies">
+                                        <h4>{{ dependancy.Id }}</h4>
+                                        <p>
+                                            <strong>Min Version:</strong> {{ dependancy.VersionSpec.MinVersion }}<br />
+                                            <strong>Max Version:</strong> {{ dependancy.VersionSpec.MaxVersion }}
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

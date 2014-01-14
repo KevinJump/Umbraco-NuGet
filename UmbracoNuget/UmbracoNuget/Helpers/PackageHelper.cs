@@ -229,13 +229,8 @@ namespace UmbracoNuget.Helpers
                 //Map Path from location
                 var mappedFileLocation = HostingEnvironment.MapPath("~/bin/" + fileLocation);
 
-                //Ensure directory exists (I hope so as it's the /bin folder)
-                if (!Directory.Exists(Path.GetDirectoryName(mappedFileLocation)))
-                {
-                    //Directory does NOT exist
-                    //Create it
-                    Directory.CreateDirectory(Path.GetDirectoryName(mappedFileLocation));
-                }
+                //Remove DLL from bin
+                File.Delete(mappedFileLocation);
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿angular.module("umbraco").controller("NuGet.DetailController",
-    function ($scope, $routeParams, nugetResource, notificationsService) {
+    function ($scope, $routeParams, nugetResource, notificationsService, treeService) {
 
         //Set isLoading to true on init
         $scope.isLoading = true;
@@ -42,10 +42,18 @@
                 //Show success or error notification message
                 if (wasPackagedInstalled) {
                     notificationsService.success("Installed Package from Repo", packageID);
+
+                    //Set Package Already installed to true
+                    $scope.package.IsAlreadyInstalled   = true;
+                    $scope.package.HasAnUpdate          = false;
+
                 }
                 else {
                     notificationsService.error("Problem Installing Package from Repo", packageID);
                 }
+
+                //Reload tree/node
+                treeService.reloadNode({ parent: "-1", section: "nuget" });
                
             });
         };
@@ -74,11 +82,10 @@
                 }
                 else {
                     notificationsService.error("Problem Installing Package Update from Repo", packageID);
-
-                    $scope.package.IsAlreadyInstalled   = false;
-                    $scope.package.HasAnUpdate          = false;
                 }
 
+                //Reload tree/node
+                treeService.reloadNode({ parent: "-1", section: "nuget" });
             });
         };
 
@@ -98,10 +105,17 @@
                 //Show success or error notification message
                 if (wasPackagedUninstalled) {
                     notificationsService.success("Uninstalled Package from Repo", packageID);
+
+                    //Set Package Already installed to false (as now removed)
+                    $scope.package.IsAlreadyInstalled   = false;
+                    $scope.package.HasAnUpdate          = false;
                 }
                 else {
                     notificationsService.error("Problem Uninstalling Package from Repo", packageID);
                 }
+
+                //Reload tree/node
+                treeService.reloadNode({ parent: "-1", section: "nuget" });
 
             });
         };
