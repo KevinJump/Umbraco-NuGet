@@ -202,6 +202,22 @@ namespace UmbracoNuget.Helpers
                 }
             }
 
+            //Remove the directories
+            foreach (var dir in package.GetContentFiles())
+            {
+                //Remove File that its package from disk
+                var fileLocation = dir.EffectivePath;
+
+                //Map Path from location
+                var mappedFileLocation = HostingEnvironment.MapPath("~/" + fileLocation);
+
+                //Get the directory to delete
+                var directoryPath = Path.GetDirectoryName(mappedFileLocation);
+
+                //Delete the directory
+                Directory.Delete(directoryPath);
+            }
+
             //For Lib files (aka /bin)
             foreach (var file in package.GetLibFiles())
             {
