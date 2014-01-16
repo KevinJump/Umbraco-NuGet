@@ -35,20 +35,7 @@ namespace UmbracoNuget
         /// <param name="e"></param>
         void packageManger_PackageInstalling(object sender, NuGet.PackageOperationEventArgs e)
         {
-            //Whilst package is installing
-            //Try & find package.xml at root of package in Content Files collection
-
-            //If so using that package.xml use PackageService
-            var packagingService = ApplicationContext.Current.Services.PackagingService;
-
-            /*
-            packagingService.ImportDataTypeDefinitions();
-            packagingService.ImportLanguages();
-            packagingService.ImportDictionaryItems();
-            packagingService.ImportTemplates();
-            packagingService.ImportContentTypes();
-            packagingService.ImportContent();
-            */
+            
         }
 
         /// <summary>
@@ -60,6 +47,9 @@ namespace UmbracoNuget
         {
             //Copy the package files out to the correct locations
             e.Package.CopyPackageFiles();
+
+            //If package has old format package.xml - lets try & improt doctypes & content etc...
+            e.Package.InstallFromPackageXml();
         }
 
         /// <summary>
@@ -69,6 +59,8 @@ namespace UmbracoNuget
         /// <param name="e"></param>
         void packageManger_PackageUninstalling(object sender, NuGet.PackageOperationEventArgs e)
         {
+            //If package has old format package.xml - lets try & uninstall - Run uninstall/undo package actions
+            e.Package.UninstallFromPackageXml();
 
         }
 

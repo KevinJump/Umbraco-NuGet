@@ -1,5 +1,5 @@
 ﻿angular.module("umbraco").controller("NuGet.DetailController",
-    function ($scope, $routeParams, nugetResource, notificationsService, treeService) {
+    function ($scope, $routeParams, nugetResource, notificationsService, navigationService) {
 
         //Set isLoading to true on init
         $scope.isLoading = true;
@@ -53,7 +53,7 @@
                 }
 
                 //Reload tree/node
-                treeService.reloadNode({ parent: "-1", section: "nuget" });
+                navigationService.syncTree({ tree: 'nuget', path: ["-1"], forceReload: true });
                
             });
         };
@@ -85,7 +85,7 @@
                 }
 
                 //Reload tree/node
-                treeService.reloadNode({ parent: "-1", section: "nuget" });
+                navigationService.syncTree({ tree: 'nuget', path: ["-1"], forceReload: true });
             });
         };
 
@@ -115,7 +115,7 @@
                 }
 
                 //Reload tree/node
-                treeService.reloadNode({ parent: "-1", section: "nuget" });
+                navigationService.syncTree({ tree: 'nuget', path: ["-1"], forceReload: true });
 
             });
         };

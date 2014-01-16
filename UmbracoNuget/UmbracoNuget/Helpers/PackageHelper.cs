@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Hosting;
+using System.Xml;
+using System.Xml.Linq;
 using NuGet;
+using umbraco.BusinessLogic;
+using umbraco.cms.businesslogic.macro;
+using umbraco.cms.businesslogic.web;
+using Umbraco.Core;
 using UmbracoNuget.Services;
+
 
 namespace UmbracoNuget.Helpers
 {
@@ -214,8 +218,13 @@ namespace UmbracoNuget.Helpers
                 //Get the directory to delete
                 var directoryPath = Path.GetDirectoryName(mappedFileLocation);
 
-                //Delete the directory
-                Directory.Delete(directoryPath);
+                //Check direcotry exists
+                if (Directory.Exists(directoryPath))
+                {
+                    //Delete the directory
+                    Directory.Delete(directoryPath);
+                }
+
             }
 
             //For Lib files (aka /bin)
@@ -235,7 +244,168 @@ namespace UmbracoNuget.Helpers
         }
 
 
+        public static void InstallFromPackageXml(this IPackage package)
+        {
+            //Check to swee if we have a package.xml file in the root of the Contents folder
+            var checkForPackageXML = package.GetContentFiles().SingleOrDefault(x => x.EffectivePath.EndsWith("\\package.xml"));
 
+            //Check to see if we found the file
+            if (checkForPackageXML != null)
+            {
+                //Found the package.xml file - let's use it
+
+                //Actual path to xml file
+                var mappedFileLocation = HostingEnvironment.MapPath("~/" + checkForPackageXML.EffectivePath);
+
+                //Load the package.xml file into XDocument so we can use it with packaging service
+                var packageXML = new XmlDocument();
+                packageXML.Load(mappedFileLocation);
+
+                //Umbraco admin user
+                var currentUser = User.GetCurrent();
+
+                //Code Below heavily lifted from umbraco.core
+                //https://github.com/umbraco/Umbraco-CMS/blob/d5d4dc95619dd510a4fa9713c593d2a918bcb43b/src/umbraco.cms/businesslogic/Packager/Installer.cs
+
+                //XElement - DataTypeDefinitions
+                //Xml as XElement which is used with the new PackagingService
+                var rootElement         = packageXML.DocumentElement.GetXElement();
+                var packagingService    = ApplicationContext.Current.Services.PackagingService;
+
+
+                //Data Types
+                var dataTypeElement = rootElement.Descendants("DataTypes").FirstOrDefault();
+                if (dataTypeElement != null)
+                {
+                    var dataTypeDefinitions = packagingService.ImportDataTypeDefinitions(dataTypeElement);
+                }
+
+                //Languages
+                var languageItemsElement = rootElement.Descendants("Languages").FirstOrDefault();
+                if (languageItemsElement != null)
+                {
+                    var insertedLanguages = packagingService.ImportLanguages(languageItemsElement);
+                }
+
+                //Dictionary Items
+                var dictionaryItemsElement = rootElement.Descendants("DictionaryItems").FirstOrDefault();
+                if (dictionaryItemsElement != null)
+                {
+                    var insertedDictionaryItems = packagingService.ImportDictionaryItems(dictionaryItemsElement);
+                }
+
+
+                //Macros
+                foreach (XmlNode n in packageXML.DocumentElement.SelectNodes("//macro"))
+                {
+                    //WB: Hopefully this gets a nice packagingService too...
+                    Macro m = Macro.Import(n);
+                }
+
+                //Templates
+                var templateElement = rootElement.Descendants("Templates").FirstOrDefault();
+                if (templateElement != null)
+                {
+                    var templates = packagingService.ImportTemplates(templateElement);
+                }
+
+
+                //DocumentTypes
+                //Check whether the root element is a doc type rather then a complete package
+                var docTypeElement = rootElement.Name.LocalName.Equals("DocumentType") ||
+                                     rootElement.Name.LocalName.Equals("DocumentTypes")
+                                         ? rootElement
+                                         : rootElement.Descendants("DocumentTypes").FirstOrDefault();
+
+                if (docTypeElement != null)
+                {
+                    var contentTypes = packagingService.ImportContentTypes(docTypeElement);
+                }
+
+
+                //Stylesheets
+                foreach (XmlNode n in packageXML.DocumentElement.SelectNodes("Stylesheets/Stylesheet"))
+                {
+                    //WB: Hopefully this gets a nice packagingService too...
+                    StyleSheet s = StyleSheet.Import(n, currentUser);
+                }
+                
+
+
+                //Documents
+                var documentElement = rootElement.Descendants("DocumentSet").FirstOrDefault();
+                if (documentElement != null)
+                {
+                    var content = packagingService.ImportContent(documentElement, -1);
+                }
+
+
+                //Package Actions
+                foreach (XmlNode n in packageXML.DocumentElement.SelectNodes("Actions/Action"))
+                {
+                    if (n.Attributes["runat"] != null && n.Attributes["runat"].Value == "install")
+                    {
+                        try
+                        {
+                            umbraco.cms.businesslogic.packager.PackageAction.RunPackageAction(package.Id, n.Attributes["alias"].Value, n);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                
+            }
+        }
+
+        public static void UninstallFromPackageXml(this IPackage package)
+        {
+             //Check to swee if we have a package.xml file in the root of the Contents folder
+            var checkForPackageXML = package.GetContentFiles().SingleOrDefault(x => x.EffectivePath.EndsWith("\\package.xml"));
+
+            //Check to see if we found the file
+            if (checkForPackageXML != null)
+            {
+                //Found the package.xml file - let's use it
+
+                //Actual path to xml file
+                var mappedFileLocation = HostingEnvironment.MapPath("~/" + checkForPackageXML.EffectivePath);
+
+                //Load the package.xml file into XDocument so we can use it with packaging service
+                var packageXML = new XmlDocument();
+                packageXML.Load(mappedFileLocation);
+                
+
+                //XElement - DataTypeDefinitions
+                //Xml as XElement which is used with the new PackagingService
+                var rootElement = packageXML.DocumentElement.GetXElement();
+
+                //Run Uninstall Package Actions
+                foreach (XmlNode n in packageXML.DocumentElement.SelectNodes("Actions/Action"))
+                {
+                    if (n.Attributes["runat"] != null && n.Attributes["runat"].Value == "install")
+                    {
+                        try
+                        {
+                            umbraco.cms.businesslogic.packager.PackageAction.UndoPackageAction(package.Id, n.Attributes["alias"].Value, n);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Taken from Umbraco.Core.XmlExtensions - But was an internal class :(
+        public static XElement GetXElement(this XmlNode node)
+        {
+            XDocument xDoc = new XDocument();
+            using (XmlWriter xmlWriter = xDoc.CreateWriter())
+                node.WriteTo(xmlWriter);
+            return xDoc.Root;
+        }
 
     }
 }
