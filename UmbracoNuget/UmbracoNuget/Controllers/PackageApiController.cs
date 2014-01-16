@@ -197,18 +197,6 @@ namespace UmbracoNuget.Controllers
             return packageResponse;
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public List<IPackage> GetInstalledPackages()
-        {
-            var installedPackages = PackageHelper.ListInstalledPackages();
-
-            return installedPackages;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -373,6 +361,84 @@ namespace UmbracoNuget.Controllers
             return packageDetails;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public PackagesResponse GetInstalledPackages(int page = 1)
+        {
+            var zeroPageIndex = page - 1;
+
+            var installedPackages = PackageHelper.ListInstalledPackages();
+
+            //Get the number of packages in the repo (latest version)
+            //Is there a way - to get this only once as it won't change between pages I hope?!
+            var totalcount = installedPackages.Count();
+            var totalPages = (int)Math.Ceiling((double)totalcount / PageSize);
+
+            //Paging from here
+            //http://bitoftech.net/2013/11/25/implement-resources-pagination-asp-net-web-api/
+
+            var prevLink = zeroPageIndex > 0 ? (page - 1).ToString() : string.Empty;
+            var nextLink = zeroPageIndex < totalPages - 1 ? (page + 1).ToString() : string.Empty;
+
+            //Packages...
+            List<IPackage> packages = installedPackages
+                .OrderBy(x => x.Id)
+                .Skip(zeroPageIndex * PageSize)
+                .Take(PageSize).ToList();
+
+
+            //The rows we will return
+            var rows = new List<Row>();
+
+            foreach (IEnumerable<IPackage> row in packages.InGroupsOf(3))
+            {
+                var packagesInRow = new List<Package>();
+
+                foreach (IPackage package in row)
+                {
+                    var packageToAdd            = new Package();
+                    packageToAdd.Authors        = package.Authors;
+                    packageToAdd.Description    = package.Description;
+                    packageToAdd.DownloadCount  = package.DownloadCount.ToString("##,###,###");
+                    packageToAdd.IconUrl        = package.IconUrl;
+                    packageToAdd.Id             = package.Id;
+                    packageToAdd.ProjectUrl     = package.ProjectUrl;
+                    packageToAdd.Published      = package.Published;
+                    packageToAdd.Summary        = package.Summary;
+                    packageToAdd.Tags           = package.Tags;
+                    packageToAdd.Title          = package.Title;
+                    packageToAdd.Version        = package.Version;
+
+                    //Add the package to the row object
+                    packagesInRow.Add(packageToAdd);
+                }
+
+                //Add the row to to the list of rows
+                var packageRow = new Row();
+                packageRow.Packages = packagesInRow;
+
+                rows.Add(packageRow);
+            }
+
+            //Build up object to return
+            var packageResponse             = new PackagesResponse();
+            packageResponse.Rows            = rows;
+            packageResponse.TotalItems      = totalcount;
+            packageResponse.TotalPages      = totalPages;
+            packageResponse.CurrentPage     = page;
+            packageResponse.PreviousLink    = prevLink;
+            packageResponse.NextLink        = nextLink;
+
+            //Return the package response
+            return packageResponse;
+        }
+
+        public PackagesResponse GetLocalPackages(int page = 1)
+        {
+            return null;
+        }
 
     }
 }

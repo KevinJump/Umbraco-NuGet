@@ -25,14 +25,18 @@ namespace UmbracoNuget.Controllers
             {
                 var menu = new MenuItemCollection();
 
-                //Route = /App_Plugins/NuGet/backoffice/Packages/create-package.html
-                var createPackageMenu = new MenuItem("create-package", "Create Package");
-                createPackageMenu.Icon = "brick"; //CSS class name without the icon- prefix - icon-brick
+                //Default Route = /App_Plugins/NuGet/backoffice/Packages/create-package.html
+                //Overwriten Route = /App_Plugins/NuGet/BackOffice/Packages/partials/dialogs/create-package.html
+                var createPackageMenu   = new MenuItem("create-package", "Create Package");
+                createPackageMenu.Icon  = "brick"; //CSS class name without the icon- prefix - icon-brick
+                createPackageMenu.LaunchDialogView("/App_Plugins/NuGet/BackOffice/Packages/partials/dialogs/create-package.html", "Create Package");
                 menu.Items.Add(createPackageMenu);
 
-                //Route = /App_Plugins/NuGet/backoffice/Packages/convert-package.html
-                var convertPackageMenu = new MenuItem("convert-package", "Convert Package");
+                //Default Route = /App_Plugins/NuGet/backoffice/Packages/convert-package.html
+                //Overwritten Route = 
+                var convertPackageMenu  = new MenuItem("convert-package", "Convert Package");
                 convertPackageMenu.Icon = "cloud-upload"; //CSS class name without the icon- prefix - icon-cloud-upload
+                convertPackageMenu.LaunchDialogView("/App_Plugins/NuGet/BackOffice/Packages/partials/dialogs/convert-package.html", "Convert Package");
                 menu.Items.Add(convertPackageMenu);
 
                 /*

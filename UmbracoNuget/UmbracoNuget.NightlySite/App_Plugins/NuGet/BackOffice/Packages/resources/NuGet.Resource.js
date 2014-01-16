@@ -33,8 +33,20 @@
                 return $http.get("NuGet/PackageApi/GetPackageUpdate?packageID=" + packageID + "&version=" + version);
             },
             
-            listInstalledPackages: function () {
+            getInstalledPackages: function () {
                 return $http.get("NuGet/PackageApi/GetInstalledPackages");
+            },
+
+            getInstalledPackagesPage: function (pageNumber) {
+                return $http.get("NuGet/PackageApi/GetInstalledPackages?page=" + pageNumber);
+            },
+
+            getLocalCreatedPackages: function () {
+                return $http.get("NuGet/PackageApi/GetLocalPackages");
+            },
+
+            getLocalCreatedPackagePages: function (pageNumber) {
+                return $http.get("NuGet/PackageApi/GetLocalPackages?page=" + pageNumber);
             },
 
 
