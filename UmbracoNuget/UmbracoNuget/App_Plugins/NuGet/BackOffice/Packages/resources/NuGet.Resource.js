@@ -33,5 +33,10 @@
                 return $http.get("NuGet/PackageApi/GetPackageUpdate?packageID=" + packageID + "&version=" + version);
             },
             
+            listInstalledPackages: function () {
+                return $http.get("NuGet/PackageApi/GetInstalledPackages");
+            },
+
+
         };
     });

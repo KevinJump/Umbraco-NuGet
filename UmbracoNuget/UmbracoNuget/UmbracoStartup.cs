@@ -1,4 +1,5 @@
-﻿using umbraco.cms.businesslogic.packager;
+﻿using NuGet;
+using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
 using UmbracoNuget.Helpers;
 using UmbracoNuget.Services;
@@ -24,6 +25,17 @@ namespace UmbracoNuget
             packageManger.PackageInstalled      += packageManger_PackageInstalled;
             packageManger.PackageUninstalling   += packageManger_PackageUninstalling;
             packageManger.PackageUninstalled    += packageManger_PackageUninstalled;
+
+            /*
+            //Classes/objects to look at for building/creating a package
+            PackageBuilder builder = new PackageBuilder();
+            OptimizedZipPackage zip = new OptimizedZipPackage();
+             * 
+             * ZipPackage
+             * ZipPackageFile
+             * OptimizedZipPackage 
+             * LocalPackage
+             */
 
         }
 

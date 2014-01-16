@@ -235,6 +235,7 @@
     <Compile Include="UmbracoStartup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Plugins\NuGet\BackOffice\Packages\partials\edit\" />
     <Folder Include="App_Plugins\NuGet\lib\" />
     <Folder Include="App_Plugins\Packages\" />
   </ItemGroup>
@@ -243,12 +244,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\List.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Detail.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Search.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Browse.Controller.js" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Edit.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\View.Controller.js" />
-    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\search.html" />
-    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\browse.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\edit.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\list.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\list\installed.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\list\local-packages.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\view\search.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\view\browse.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\resources\NuGet.Resource.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\detail.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\view.html" />

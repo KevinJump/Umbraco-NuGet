@@ -1,4 +1,4 @@
-﻿angular.module("umbraco").controller("NuGet.ViewController",
+﻿angular.module("umbraco").controller("NuGet.EditController",
     function ($scope, $routeParams) {
 
         //Currently loading /umbraco/general.html
@@ -6,5 +6,5 @@
         var viewName    = $routeParams.id;
         viewName        = viewName.replace('%20', '-').replace(' ', '-');
 
-        $scope.templatePartialURL   = '../App_Plugins/NuGet/backoffice/Packages/partials/view/' + viewName + '.html';
+        $scope.templatePartialURL   = '../App_Plugins/NuGet/backoffice/Packages/partials/edit/' + viewName + '.html';
     });
