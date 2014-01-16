@@ -244,12 +244,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\List.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Detail.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Search.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Browse.Controller.js" />
-    <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Edit.Controller.js" />
-    <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\View.Controller.js" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Partial.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\edit.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\list.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\list\installed.html" />
