@@ -29,7 +29,7 @@ namespace UmbracoNuget.Controllers
                 //Overwriten Route = /App_Plugins/NuGet/BackOffice/Packages/partials/dialogs/create-package.html
                 var createPackageMenu   = new MenuItem("create-package", "Create Package");
                 createPackageMenu.Icon  = "brick"; //CSS class name without the icon- prefix - icon-brick
-                createPackageMenu.LaunchDialogView("/App_Plugins/NuGet/BackOffice/Packages/partials/dialogs/create-package.html", "Create Package");
+                createPackageMenu.NavigateToRoute("nuget/Packages/create/package");
                 menu.Items.Add(createPackageMenu);
 
                 //Default Route = /App_Plugins/NuGet/backoffice/Packages/convert-package.html
@@ -38,24 +38,7 @@ namespace UmbracoNuget.Controllers
                 convertPackageMenu.Icon = "cloud-upload"; //CSS class name without the icon- prefix - icon-cloud-upload
                 convertPackageMenu.LaunchDialogView("/App_Plugins/NuGet/BackOffice/Packages/partials/dialogs/convert-package.html", "Convert Package");
                 menu.Items.Add(convertPackageMenu);
-
-                /*
-                ****** Test Items *******
                 
-                //Route = /App_Plugins/NuGet/hello.html
-                var m = new MenuItem("test1", "Test 1");
-                m.Icon = "wine-glass";
-                m.LaunchDialogView("/App_Plugins/NuGet/hello.html", "My Dialog Title");
-                menu.Items.Add(m);
-
-                //URL in address bar - #nuget/Packages/view/browse
-                var t = new MenuItem("test2", "Test 2");
-                t.Icon = "wine-glass";
-                t.NavigateToRoute("nuget/Packages/view/browse");
-                menu.Items.Add(t);
-                
-                */
-
                 return menu;
             }
 

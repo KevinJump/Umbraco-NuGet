@@ -251,9 +251,10 @@
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Browse.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\controllers\Partial.Controller.js" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\edit.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\create.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\list.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\dialogs\convert-package.html" />
-    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\dialogs\create-package.html" />
+    <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\create\package.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\list\installed.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\list\local-packages.html" />
     <Content Include="App_Plugins\NuGet\BackOffice\Packages\partials\view\search.html" />

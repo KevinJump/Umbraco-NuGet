@@ -1,0 +1,61 @@
+﻿<div class="umb-pane">
+    
+    <umb-control-group label="Title" description="Persons email">
+        <input type="text" class="umb-editor umb-textstring" ng-model="package.title" required />
+    </umb-control-group>
+    
+    <umb-control-group label="ID" description="The unique package ID">
+        <input type="text" class="umb-editor umb-textstring" ng-model="package.id" required />
+    </umb-control-group>
+
+    <umb-control-group label="Version" description="The version number of this package eg: 1.2.1">
+        <input type="text" class="umb-editor umb-textstring" ng-model="package.version" required />
+    </umb-control-group>
+
+    <umb-control-group label="Authors" description="The author/owners of this created package">
+        <input type="text" class="umb-editor umb-textstring" ng-model="package.authors" required />
+    </umb-control-group>
+    
+    <umb-control-group label="Icon Url" description="The Url to the icon for this package">
+        <input type="text" class="umb-editor umb-textstring" ng-model="package.iconurl" />
+    </umb-control-group>
+    
+    <umb-control-group label="Project Url" description="The Url to the project for this package">
+        <input type="text" class="umb-editor umb-textstring" ng-model="package.projecturl" />
+    </umb-control-group>
+    
+    <umb-control-group label="Summary" description="Summary..">
+        <textarea class="umb-editor umb-textstring" ng-model="package.summary" required></textarea>
+    </umb-control-group>
+    
+    <umb-control-group label="Description" description="Description..">
+        <textarea class="umb-editor umb-textstring" ng-model="package.description" required></textarea>
+    </umb-control-group>
+    
+    <umb-control-group label="Tags" description="A comma seperated string of tags for this package">
+        <input type="text" class="umb-editor umb-textstring" ng-model="package.tags" required />
+    </umb-control-group>
+    
+    <h4>TODO:</h4>
+    <ul>
+        <li>Pick dependencies</li>
+        <li>Pick LIB files (aka DLLs for Bin)</li>
+        <li>Pick CONTENT files (aka all the other files, App_Plugins/somepkg/*)</li>
+        <li>Document Types</li>
+        <li>Content</li>
+        <li>Data Types</li>
+        <li>Dictionary Items</li>
+        <li>Templates</li>
+        <li>Macros</li>
+        <li>CSS</li>
+        <li>Package Actions</li>
+        <li>Any other legacy stuff from XML file</li>
+    </ul>
+
+    <div class="umb-tab-buttons">
+        <div class="btn-group">
+            <button ng-click="savePackage(package)" data-hotkey="ctrl+s" class="btn btn-success">Create Package</button>
+        </div>
+    </div>
+    
+</div>
