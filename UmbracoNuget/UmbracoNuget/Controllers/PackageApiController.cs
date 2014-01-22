@@ -15,7 +15,7 @@ using umb = Umbraco.Web;
 namespace UmbracoNuget.Controllers
 {
     [PluginController("NuGet")]
-    public class PackageApiController : UmbracoApiController
+    public class PackageApiController : UmbracoAuthorizedApiController
     {
         public const int PageSize = 9;
 

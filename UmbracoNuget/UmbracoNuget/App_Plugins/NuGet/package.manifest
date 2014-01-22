@@ -7,7 +7,9 @@
 		'~/App_Plugins/NuGet/backoffice/Packages/controllers/Search.Controller.js',
 		'~/App_Plugins/NuGet/backoffice/Packages/controllers/InstalledPackages.Controller.js',
 		'~/App_Plugins/NuGet/backoffice/Packages/controllers/LocalPackages.Controller.js',
+		'~/App_Plugins/NuGet/backoffice/Packages/controllers/Creator.Controller.js',
 		'~/App_Plugins/NuGet/backoffice/Packages/resources/NuGet.Resource.js',
+		'~/App_Plugins/NuGet/backoffice/Packages/resources/Creator.Resource.js',
 	],
 	css: []
 }

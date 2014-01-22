@@ -1,4 +1,5 @@
-﻿using NuGet;
+﻿using System;
+using NuGet;
 using umbraco.cms.businesslogic.packager;
 using Umbraco.Core;
 using UmbracoNuget.Helpers;
@@ -74,6 +75,8 @@ namespace UmbracoNuget
             //If package has old format package.xml - lets try & uninstall - Run uninstall/undo package actions
             e.Package.UninstallFromPackageXml();
 
+            //Try & run OLD Legacy event - BeforeDelete of Package aka uninstall/remove/delete
+            //umbraco.cms.businesslogic.packager.InstalledPackage.FireBeforeDelete
         }
 
         /// <summary>
@@ -83,6 +86,9 @@ namespace UmbracoNuget
         /// <param name="e"></param>
         void packageManger_PackageUninstalled(object sender, NuGet.PackageOperationEventArgs e)
         {
+            //Try & run OLD Legacy event - AfterDelete of package aka uninstall/remove/delete
+            //umbraco.cms.businesslogic.packager.InstalledPackage.FireAfterDelete
+
             //Remove the package files
             e.Package.RemovePackageFiles();
         }
